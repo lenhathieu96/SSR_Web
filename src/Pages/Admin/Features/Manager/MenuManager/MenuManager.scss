@@ -1,0 +1,128 @@
+$addColor: #00b551;
+$updateColor: #283593;
+$secodaryColor: #e78200;
+
+.MenuManager-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  &__detail {
+    flex: 0.9;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .Menu-wrapper {
+      flex:0.7;
+      display:flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .EditMenu-wrapper {
+      flex: 0.3;
+      display: flex;
+      flex-direction: column;
+
+      background: white;
+      border-radius: 20px;
+      padding: 10px;
+      margin-left: 10px;
+
+      h4 {
+        text-align: center;
+        flex: 0.1;
+        color: $secodaryColor;
+        
+      }
+
+      form{
+        flex:0.9;
+        display:flex;
+        flex-direction: column;
+        height: 100%;
+
+        .input-wrapper{
+          flex:1;
+        }
+
+        .btn-wrapper {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+
+          .btn {
+            flex: 0.3;
+            height: 50px;
+            border-radius: 20px;
+            outline: none;
+            box-shadow: none;
+            color: white;
+            background: gray;
+  
+            &--update {
+              background-color: $updateColor;
+              flex: 0.3;
+            }
+  
+            &--add {
+              background-color: $addColor;
+              flex: 0.6;
+            }
+  
+            &--del {
+              background-color: red;
+              flex: 0.3;
+              color:white
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &__tools {
+    flex: 0.1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: baseline;
+    margin-top: 5px;
+
+    button {
+      height: 50px;
+      flex: 0.2;
+      margin-right: 10px;
+      border-radius: 20px;
+      outline: none;
+      background: white;
+      &:hover {
+        background: $secodaryColor;
+      }
+    }
+
+    .MuiInput-root {
+      flex: 0.8;
+      border: 1px solid white;
+      padding: 5px;
+      background-color: white;
+      border-radius: 10px;
+    }
+
+    .MuiInput-underline {
+      border-bottom: none;
+
+      &:hover:not(.Mui-disable)::before {
+        border-bottom: none;
+      }
+      &::after {
+        border-bottom: none;
+      }
+      &::before {
+        border-bottom: none;
+      }
+    }
+  }
+}

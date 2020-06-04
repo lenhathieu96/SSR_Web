@@ -1,0 +1,11 @@
+.menu {
+    flex: 1;
+    height: 0;
+    overflow-y: auto;
+    width: 100%;
+
+   
+    .table-row:hover{
+      cursor: pointer;
+    }
+  }

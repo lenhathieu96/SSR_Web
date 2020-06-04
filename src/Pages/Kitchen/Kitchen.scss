@@ -1,0 +1,109 @@
+$addColor: #00b551;
+$primaryColor: #283593;
+$secodaryColor: #e78200;
+$tertiaryColor:rgba(0, 0, 1, 0.151);
+
+.Kitchen-container{
+    display: flex;
+    flex-direction: column;
+    flex:1;
+    height:100%;
+    &__body{
+        flex:1;
+        display: flex;
+        flex-direction: row;
+
+        .process-container{
+            padding-left:5px;
+            padding-right: 5px;
+            
+            &__header{
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                padding:5px;
+                height: 50px; 
+                border-radius: 20px 20px 0px 0px;
+
+                .icon{
+                    flex:0.1;
+                    color:white
+                }
+
+                h4{
+                    color:white;
+                    flex:0.8
+                }
+            }
+
+            &__body{
+                border-radius: 0px 0px 20px 20px;
+                border: 1px solid #283593;
+                height: 550px;
+                overflow-y: auto;
+            }
+        }
+
+    }
+    &__footer{
+        height:50px;
+        background: $tertiaryColor;
+    }
+}
+
+.Order-container{
+    display: flex;
+    flex-direction: row;
+    margin: 10px 5px 5px 5px;
+    padding: 5px;
+    align-items: center;
+
+    border-radius: 10px;
+    box-shadow: 2px 2px 15px;
+
+    .Order-subContainer {
+        flex: 0.4;
+        margin-right: 10px;
+        text-align: center;
+
+        &__name{
+            flex: 0.2;
+            font-size: larger;
+            font-weight: bold;
+        }
+
+        &__note{
+            font-size: small;
+            font-style: italic;
+            float: left;
+        }
+    }
+
+    &__time{
+        flex: 0.3;
+    }
+
+    .Order-btnContainer{
+        flex: 0.2;
+        display: flex;
+        flex-direction: row;
+
+        button{
+            width: 80px;
+            margin-right: 15px;
+            border-radius: 10px;
+            height: 40px;
+            color:white;
+            outline:none;
+        }
+
+        .btn-one{
+            background: $tertiaryColor;
+        }
+
+        .btn-all{
+            background:#d92b00
+        }
+    }  
+}

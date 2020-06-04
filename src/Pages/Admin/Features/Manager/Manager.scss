@@ -1,0 +1,48 @@
+.Manager {
+  display: flex;
+  flex-direction: row;
+  flex:1;
+  padding:5px;
+  .left-menu{
+    display: flex;
+    flex-direction: column;
+    button{
+        height: 100px;
+        width: 120px;
+        margin-bottom: 10px;
+        border-radius: 50px 0px 0px 50px;
+        color: rgba(0, 0, 0, 0.54);
+        outline: none;
+        box-shadow: none;
+        background-color: transparent;
+        svg {
+          margin-bottom: 10px;
+        }
+
+        &:hover {
+          box-shadow: none;
+          background-color: transparent;
+        }
+
+        &.active{
+          background-color: #283593;
+          color: #ffff;
+        }
+        .MuiButton-label {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+  }
+  .content {
+    flex: 1;
+    padding: 10px;
+    background-color: #283593;
+    border-radius: 20px;
+    display: flex;
+    transition: border-radius 0.1s ease-in-out;
+  }
+  .first-content {
+    border-radius: 0px 20px 20px 20px;
+  }
+}
