@@ -4,82 +4,55 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-import TableList from "./TableList/index";
-import Menu from "../../Common/Menu/index";
+import TableList from "./TableList";
+import Menu from "../../Common/Menu";
 import TableNull from "./SelectedTable/tableNulll"
-import TableDetail from "./SelectedTable/tableDetail"
+import TableDetail from "./SelectedTable"
 
 import socket from "../../../../Connect/SocketIO";
 import serverURL from '../../../../Connect/ServerURL'
 
 import "./Cashier.scss";
 
-const tempdata = [
-  {
-    _id: "1231",
-    name: "Bún Chả Lớn",
-    price: 200000,
-  },
-  {
-    _id: "31212",
-    name: "Bún Chả Nhỏ",
-    price: 780000,
-  },
-  {
-    _id: "31a123",
-    name: "Bún Đậu",
-    price: 780000,
-  },
-];
-
 function Cashier() {
   const URL = serverURL+"food";
 
-  const [tableQuantity, setTableQuantiy] = useState([]);
+  const [listTable, setListTable] = useState([]);
 
-  const [currentBill, setCurrentBill] = useState({});
-  const [currentTable, setCurrentTable] = useState(0);
+  const [currentTable, setCurrentTable] = useState({});
 
-  const [servedTable, setServedTable] = useState([])
-  const [allBill,setAllBill] = useState([])
-
-  const [menuData, setData] = useState([tempdata]);
+  const [menuData, setData] = useState([]);
 
   const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
-    //get all data of menu
     axios.get(URL).then((res) => {
       if (res.status === 200) {
         setData(res.data);
+        
       }
     });
-
+    const tables = new Array(30)
+    .fill({})
+    .map((item,index)=>({ ...item, Table: index+1}))
     socket.emit('allBill')
-    socket.on('allBillResult',(orders)=>{
-      let arr =[]
-      console.log("co du lieu ve")
-      for(let item of orders){
-       arr.push(item.Table)
+    socket.on('allBillResult',(bills)=>{
+     let tempTables = [...tables]
+    //have bills not payed yet
+      if(bills.length>0){
+        for(let item of bills){
+          let index = item.Table -1;
+          tempTables[index] = {...tempTables[index], ...item}
+        }
       }
-     setServedTable(arr)
-     setAllBill(orders)
+      setListTable(tempTables)
     })
-    
-
-    //create an array with n elements for n tables in restaurant
-    let quantity = [];
-    for (let i = 0; i < 30; i++) {
-      quantity.push(i);
-    }
-    setTableQuantiy(quantity);
-  }, []);
+  },[]);
 
   const createBill = (order) => {
     socket.emit("createBill", order);
     socket.on('createBillResult',(result)=>{
-      setCurrentTable(0)
-      setCurrentBill({})
+      setCurrentTable({})
       setShowMenu(false)
     })
   };
@@ -88,70 +61,86 @@ function Cashier() {
     // console.log(billID)
     socket.emit('chargeBill',billID)
     socket.on('chargeBillResult',(result)=>{
-      setCurrentTable(0)
-      setCurrentBill({})
+      setCurrentTable({})
     })
   }
 
   //choose a table when click on icon table 
   const getCurrentTable = (number) => {
-    setCurrentTable(number);
-    const selectBill = allBill.find(bill=>bill.Table===number)
-    selectBill?setCurrentBill(selectBill):setCurrentBill({})
+    const table = listTable.find(item=>item.Table === number)
+    setCurrentTable(table) 
   };
 
   // choose a food add to bill on click in menu
   const setSelectFood = (food) => {
-    food.done = 0;
-    food.quantity = 1;
-    food.served = 0;
-    food.totalPrice = food.price;
-    
-    if(Object.keys(currentBill).length===0){
-      let tempBill = {Order:[food]}
-      setCurrentBill(tempBill)
-      //if that bill have already => can't add new one
-    }else if(!currentBill.hasOwnProperty('Created')){
-      let tempBill = {...currentBill}
-      tempBill.Order.push(food)
-      setCurrentBill(tempBill)
+    let tempBill ;
+    if(!currentTable.hasOwnProperty('Orders')){
+      tempBill = {...currentTable,Orders:[]}
+      food.done = 0;
+      food.quantity = 1;
+      food.served = 0;
+      food.totalPrice = food.price;
+      food.note = "";
+      tempBill.Orders.push(food)
+    }else{
+      tempBill = {...currentTable}
+      if(tempBill.Orders.find(item=>item._id===food._id)){
+        const orders = tempBill.Orders
+        const index = orders.findIndex(item => item._id === food._id)
+        orders[index].quantity += 1
+        orders[index].totalPrice = orders[index].price * orders[index].quantity;
+      }else{
+        food.done = 0;
+        food.quantity = 1;
+        food.served = 0;
+        food.totalPrice = food.price;
+        food.note = "";
+        tempBill.Orders.push(food)
+      }
     }
+    setCurrentTable(tempBill)
   };
 
   
   // //increase quantity and price for order
   const increaseOrder = (id) => {
-    if(!currentBill.hasOwnProperty('Created')){
-      let bill = {...currentBill};
-      let orders = bill.Order
+      let tempBill = {...currentTable};
+      let orders = tempBill.Orders
       const index = orders.findIndex((item) => item._id === id);
-      orders[index].quantity++;
+      orders[index].quantity+=1;
       orders[index].totalPrice = orders[index].price * orders[index].quantity;
-      setCurrentBill(bill);
-    } 
+      setCurrentTable(tempBill);
   };
 
   // //decrease quantity and price for order
   const decreaseOrder = (id) => {
-    if(!currentBill.hasOwnProperty('Created')){
-      let bill = {...currentBill};
-      let orders = bill.Order
+      let tempBill = {...currentTable};
+      let orders = tempBill.Orders
       const index = orders.findIndex((item) => item._id === id);
       orders[index].totalPrice = orders[index].price * orders[index].quantity;
-      orders[index].quantity--;
-      setCurrentBill(bill);
-    }
+      orders[index].quantity -= 1;
+      setCurrentTable(tempBill);
   };
 
   // //delete Order in Bill when create new Bill
   const delOrder = (id) => {
-    if(!currentBill.hasOwnProperty('Created')){
-      let bill = {...currentBill};
-      let orders = bill.Order
-      bill.Order = orders.filter((item) => item._id !== id)
-      setCurrentBill(bill)
+    if(!currentTable.hasOwnProperty('Created')){
+      let bill = {...currentTable};
+      let orders = bill.Orders
+      bill.Orders = orders.filter((item) => item._id !== id)
+      setCurrentTable(bill)
     }
   };
+
+  const noteOrder = (id,text)=>{
+    if(!currentTable.hasOwnProperty('Created')){
+      let bill = {...currentTable};
+      let orders = bill.Orders
+      const index = orders.findIndex((item) => item._id === id);
+      orders[index].note = text
+      setCurrentTable(bill)
+    }
+  }
 
   return (
     <div className="Cashier-container">
@@ -179,8 +168,7 @@ function Cashier() {
         <div className={`body ${!showMenu ? "first-content" : ""}`}>
           {!showMenu ? (
             <TableList
-              tableQuantity={tableQuantity}
-              servedTable = {servedTable}
+              listTable={listTable}
               getCurrentTable={getCurrentTable}
             />
           ) : (
@@ -192,31 +180,31 @@ function Cashier() {
       <div className="right-container">
         {/* render header with state currentTable */}
         <div className="header">
-          {currentTable !== 0 ? (
-            <div className="title">
-              Bàn {currentTable}
-              {/* btn-close current table */}
-              <FontAwesomeIcon
-                icon={faTimes}
-                size={"lg"}
-                style={{ color: "white", marginLeft: 100 }}
-                onClick={() => setCurrentTable(0)}
-              />
-            </div>
-          ) : null}
+        {currentTable.hasOwnProperty('Table') ?
+          <div className="header__title">
+            Bàn {currentTable.Table}
+            {/* btn-close current table */}
+            <FontAwesomeIcon
+              icon={faTimes}
+              size={"lg"}
+              style={{ color: "white", marginLeft: 100 }}
+              onClick={() => setCurrentTable({})}
+            /> 
+          </div>
+          :null  
+        }
         </div>
         {/* order-detail of current table */}
-        <div className={`body ${currentTable !== 0 ? "haveTable" : ""} `}>
-          {currentTable !== 0 ? (
+        <div className={`body ${currentTable.hasOwnProperty('Table')? "haveTable" : ""} `}>
+          {currentTable.hasOwnProperty('Table') ? (
             <TableDetail
-              table={currentTable}
-              bill={currentBill}
-
+              currentTable={currentTable}
               createBill={createBill}
               chargeBill={chargeBill}
 
               increaseOrder={increaseOrder}
               decreaseOrder={decreaseOrder}
+              noteOrder={noteOrder}
               delOrder={delOrder}
             />
           ) : (

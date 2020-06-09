@@ -7,37 +7,34 @@ import {
   faChevronRight,
   faUtensils,
 } from "@fortawesome/free-solid-svg-icons";
-
 import Button from "@material-ui/core/Button";
 
 import "./TableList.scss";
 
 TableList.propTypes = {
-  tableQuantity: PropTypes.array.isRequired,
+  listTable:PropTypes.array.isRequired,
   getCurrentTable: PropTypes.func.isRequired,
 };
 
 function TableList(props) {
-  const { tableQuantity, servedTable, getCurrentTable } = props;
+  const { listTable, getCurrentTable } = props;
 
-  const [table, setTable] = useState([]);
+  const servingTables = listTable.filter(item=>Object.keys(item).length >1).length
+
   const [start, setStart] = useState(0);
-  const [end, setEnd] = useState(0);
+  const [end, setEnd] = useState(15);
+  const [render_tables, setRenderTables] = useState([]);
+  
+  useEffect(()=>{
+    setRenderTables(listTable.slice(start,end))
+  },[listTable,start,end])
 
-  useEffect(() => {
-    setStart(0);
-    tableQuantity.length > 15 ? setEnd(15) : setEnd(tableQuantity.length);
-  }, [tableQuantity]);
-
-  useEffect(() => {
-    setTable(tableQuantity.slice(start, end));
-  }, [start, end]);
 
   //on btn next is clicked
   const handleNext = () => {
     setStart(end);
-    if (tableQuantity.length < end + 15) {
-      setEnd(tableQuantity.length);
+    if (listTable.length < end + 15) {
+      setEnd(listTable.length);
     } else {
       setEnd(end + 15);
     }
@@ -77,22 +74,22 @@ function TableList(props) {
 
         {/* render table list */}
         <div className="list-wrapper">
-          {table.map((item, index) => (
+          {render_tables.map((item, index) => (
             <Button
-              className={servedTable.indexOf(index + 1) !== -1 ? "served" : ""}
+              className={Object.keys(item).length>1 ? 'served ' : ''}
               key={index}
-              onClick={() => getCurrentTable(index + 1)}
+              onClick={() => getCurrentTable(item.Table)}
             >
               <div className="table-item">
                 <FontAwesomeIcon icon={faUtensils} size={"3x"} className="icon" />
-                <p>Bàn {index + 1}</p>
+                <p>Bàn {item.Table}</p>
               </div>
             </Button>
           ))}
         </div>
         {/* forward-arrow */}
         <div className="arrow-wrapper">
-          {end !== tableQuantity.length ? (
+          {end !== listTable.length ? (
             <FontAwesomeIcon
               icon={faChevronRight}
               size={"2x"}
@@ -107,7 +104,7 @@ function TableList(props) {
         </div>
       </div>
       <div className="tableList-container__config">
-        Số Bàn Đang Phục Vụ: {servedTable.length}/{tableQuantity.length}
+        Số Bàn Đang Phục Vụ: {servingTables}/{listTable.length}
       </div>
     </div>
   );

@@ -46,7 +46,7 @@ $secodaryColor: #e78200;
     flex-direction: column;
     padding:5px;
     .header{
-      .title{
+      &__title{
         border-radius: 20px 20px 0px 0px;
         height: 36px;
         width: 191.05px;

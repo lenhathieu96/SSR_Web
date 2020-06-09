@@ -2,9 +2,9 @@ import React, { useState } from "react";
 // import PropTypes from 'prop-types';
 import { Button } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHamburger, faTable } from "@fortawesome/free-solid-svg-icons";
+import { faHamburger, faTable, faChartBar} from "@fortawesome/free-solid-svg-icons";
 
-import MenuManager from './MenuManager/index'
+import MenuManager from './MenuManager'
 
 import './Manager.scss'
 
@@ -39,10 +39,22 @@ function Manager() {
           Thực Đơn
         </Button>
 
+        <Button
+          onClick={()=>setFeature(2)}
+          className={feature=== 2?"active":""}
+        >
+          <FontAwesomeIcon
+            icon={faChartBar}
+            size={"3x"}
+            className="nav-icon"
+          />
+          Thống Kê
+        </Button>
+
         {/* table button */}
         <Button
-          className={feature===2?"active":""}
-          onClick={()=>setFeature(2)}
+          className={feature=== 3?"active":""}
+          onClick={()=>setFeature(3)}
         >
           <FontAwesomeIcon icon={faTable} size={"3x"} className="nav-icon" />
           Phòng Bàn

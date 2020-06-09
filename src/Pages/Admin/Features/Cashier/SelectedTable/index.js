@@ -7,20 +7,19 @@ import Order from "./Order";
 import "./SelectedTable.scss";
 
 orderDetail.propTypes = {
-  table: PropTypes.number.isRequired,
-  bill: PropTypes.object.isRequired,
-  };
+  currentTable: PropTypes.object.isRequired,
+};
 
 function orderDetail(props) {
   const {
-    table,bill,
-    increaseOrder,decreaseOrder,delOrder,
+    currentTable,
+    increaseOrder,decreaseOrder,delOrder,noteOrder,
     createBill,chargeBill
   } = props;
 
   let totalPrice = 
-  Object.keys(bill).length!==0? 
-    bill.Order.reduce((totalPrice, order) => (totalPrice += order.totalPrice),0)
+  Object.keys(currentTable).length>1? 
+    currentTable.Orders.reduce((totalPrice, order) => (totalPrice += order.totalPrice),0)
   :
     0;
 
@@ -28,19 +27,21 @@ function orderDetail(props) {
     <div className="tableDetail-container">
       {/* render order item in bill if it have */}
       <div className="tableDetail-container__info">
-        {Object.keys(bill).length===0||bill.Order.length===0?
+        {Object.keys(currentTable).length <= 1 || currentTable.Orders.length === 0?
           <div className = "order-null">
             <p>Bàn Trống</p>
           </div>
         :
-          bill.Order.map((order, index) => (
+        currentTable.Orders.map((order, index) => (
             <Order
               key={order._id}
               index={index + 1}
               order={order}
+
               increaseOrder={increaseOrder}
               decreaseOrder={decreaseOrder}
               delOrder={delOrder}
+              noteOrder={noteOrder}
             />        
           )
         )
@@ -48,8 +49,8 @@ function orderDetail(props) {
       </div>
 
       {/* render tool if bill have order */}
-      {Object.keys(bill).length!==0?
-        bill.Order.length!==0?
+      {Object.keys(currentTable).length > 1 ?
+        currentTable.Orders.length!==0?
           <div className="tableDetail-container__tools">
             <div className="total-price">
               <p>Tổng Tiền</p>
@@ -59,21 +60,21 @@ function orderDetail(props) {
             </div>
             <div className="button-wrapper">
               <Button
-                className={!bill.hasOwnProperty('Created') ? "btn-add" : "btn-charge"}
-                onClick={() =>
-                  !bill.hasOwnProperty('Created') ?
-                    createBill({
-                      Table: table,
-                      Order: bill.Order,
-                      TotalPrice: totalPrice,
-                    })
-                  :
-                    chargeBill(bill.ID)
-                }
+                className={!currentTable.hasOwnProperty('Created') ? "btn-add" : "btn-charge"}
+                // onClick={() =>
+                //   !currentTable.hasOwnProperty('Created') ?
+                //     createBill({
+                //       Table: currentTable,
+                //       Orders: bill.Order,
+                //       TotalPrice: totalPrice,
+                //     })
+                //   :
+                //     chargeBill(bill.ID)
+                // }
               >
-                {!bill.hasOwnProperty('Created') ? "Tạo Đơn" : "Thanh Toán"}
+                {!currentTable.hasOwnProperty('Created') ? "Tạo Đơn" : "Thanh Toán"}
               </Button>
-              {bill.hasOwnProperty('Created') ? (
+              {currentTable.hasOwnProperty('Created') ? (
                 <Button className="btn-edit">
                   <span>Tách Ghép Đơn</span>
                 </Button>
