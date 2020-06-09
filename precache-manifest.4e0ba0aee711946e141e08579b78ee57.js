@@ -1,27 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "fd2a75da79e10c888c0889b3674a690a",
+    "revision": "881ac48a6b20d64d51649f00bf0b3be7",
     "url": "/SSR_Web/index.html"
   },
   {
-    "revision": "7e95c1bb453a2c0b8d3d",
+    "revision": "e6fcd27f729473122259",
     "url": "/SSR_Web/static/css/2.685b1527.chunk.css"
   },
   {
-    "revision": "4f053f18078014840345",
-    "url": "/SSR_Web/static/css/main.dd3dcbb4.chunk.css"
+    "revision": "96f3cb685c52ccc882aa",
+    "url": "/SSR_Web/static/css/main.16e912f5.chunk.css"
   },
   {
-    "revision": "7e95c1bb453a2c0b8d3d",
-    "url": "/SSR_Web/static/js/2.b7dd330d.chunk.js"
+    "revision": "e6fcd27f729473122259",
+    "url": "/SSR_Web/static/js/2.2e5d7b7e.chunk.js"
   },
   {
     "revision": "f4591267eccdb3163156248a281786f0",
-    "url": "/SSR_Web/static/js/2.b7dd330d.chunk.js.LICENSE.txt"
+    "url": "/SSR_Web/static/js/2.2e5d7b7e.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "4f053f18078014840345",
-    "url": "/SSR_Web/static/js/main.6abf3882.chunk.js"
+    "revision": "96f3cb685c52ccc882aa",
+    "url": "/SSR_Web/static/js/main.f3d59e90.chunk.js"
   },
   {
     "revision": "ee34ce843cd7329d01cb",
