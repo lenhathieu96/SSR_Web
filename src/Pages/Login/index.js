@@ -1,5 +1,4 @@
 import React from "react";
-import { Form, Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 
@@ -13,8 +12,8 @@ function Login(props) {
     axios
       .post(serverURL, { name, password })
       .then((res) => {
-        console.log(res.status);
-        console.log(name.slice(0, 3));
+        // console.log(res.status);
+        // console.log(name.slice(0, 3));
         if (res.status === 200) {
           localStorage.setItem("token", "1234");
           let { from } =

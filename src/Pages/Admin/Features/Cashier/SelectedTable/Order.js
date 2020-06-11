@@ -1,37 +1,47 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
 
-import Button from "@material-ui/core/Button";
+import {
+  increaseOrder,
+  decreaseOrder,
+  delOrder,
+  noteOrder,
+} from "../../../../../actions/currenTableActions";
+
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PlusIcon from "@material-ui/icons/Add";
 import MinusIcon from "@material-ui/icons/Minimize";
 import EditIcon from "@material-ui/icons/Edit";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
+
+import EditModal from "../../../Common/Modal/EditModal";
 
 OrderItem.propTypes = {
   order: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired,
-  increaseOrder: PropTypes.func,
-  decreaseOrder: PropTypes.func,
-  delOrder: PropTypes.func,
 };
 
 function OrderItem(props) {
-  const {
-    order,
-    index,
-    increaseOrder,
-    decreaseOrder,
-    delOrder,
-    noteOrder,
-  } = props;
+  const { order, index } = props;
+  const dispath = useDispatch();
+
   const [showModal, setShowModal] = useState(false);
-  const [note, setNote] = useState("");
+
+  const handleOnIncrease = (orderId) => {
+    const action = increaseOrder(orderId);
+    dispath(action);
+  };
+
+  const handleOnDecrease = (orderId) => {
+    const action = decreaseOrder(orderId);
+    dispath(action);
+  };
+
+  const handleOnDelete = (orderId) => {
+    const action = delOrder(orderId);
+    dispath(action);
+  };
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -40,8 +50,13 @@ function OrderItem(props) {
     setShowModal(false);
   };
 
-  const handlesubmitNote = () => {
-    noteOrder(order._id, note);
+  const handelOnNote = (orderId, textNote) => {
+    const action = noteOrder({ orderId, textNote });
+    dispath(action);
+  };
+
+  const handleSubmitNote = (note) => {
+    handelOnNote(order._id, note);
     handleCloseModal();
   };
 
@@ -58,7 +73,7 @@ function OrderItem(props) {
             disabled={order.quantity > 1 ? false : true}
             onClick={() => {
               if (order.served === 0 && order.done === 0) {
-                decreaseOrder(order._id);
+                handleOnDecrease(order._id);
               }
             }}
           >
@@ -71,7 +86,7 @@ function OrderItem(props) {
             aria-label="plus-one"
             onClick={() => {
               if (order.served === 0 && order.done === 0) {
-                increaseOrder(order._id);
+                handleOnIncrease(order._id);
               }
             }}
           >
@@ -84,7 +99,10 @@ function OrderItem(props) {
         </p>
         {/* btn-del */}
         {order.served === 0 && order.done === 0 ? (
-          <IconButton aria-label="delete" onClick={() => delOrder(order._id)}>
+          <IconButton
+            aria-label="delete"
+            onClick={() => handleOnDelete(order._id)}
+          >
             <DeleteIcon />
           </IconButton>
         ) : null}
@@ -94,27 +112,14 @@ function OrderItem(props) {
           </IconButton>
         ) : null}
       </div>
-      <div style={{marginLeft:20,fontStyle:'italic'}}>{order.note}</div>
-
-      <Dialog open={showModal} onClose={handleCloseModal} fullWidth={true}>
-        <DialogTitle id="form-dialog-title">Ghi Chú</DialogTitle>
-        <DialogContent>
-          <TextField
-            fullWidth={true}
-            onChange={(event) => {
-              setNote(event.target.value);
-            }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal} color="primary">
-            Hủy
-          </Button>
-          <Button onClick={handlesubmitNote} color="primary">
-            Thêm
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <div style={{ marginLeft: 20, fontStyle: "italic" }}>{order.note}</div>
+      
+      {/* note modal */}
+      <EditModal
+        showModal={showModal}
+        handleSubmitNote={handleSubmitNote}
+        handleCloseModal={handleCloseModal}
+      />
     </div>
   );
 }

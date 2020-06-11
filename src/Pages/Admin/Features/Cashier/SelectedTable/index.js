@@ -13,7 +13,6 @@ orderDetail.propTypes = {
 function orderDetail(props) {
   const {
     currentTable,
-    increaseOrder,decreaseOrder,delOrder,noteOrder,
     createBill,chargeBill
   } = props;
 
@@ -37,11 +36,6 @@ function orderDetail(props) {
               key={order._id}
               index={index + 1}
               order={order}
-
-              increaseOrder={increaseOrder}
-              decreaseOrder={decreaseOrder}
-              delOrder={delOrder}
-              noteOrder={noteOrder}
             />        
           )
         )
@@ -61,16 +55,16 @@ function orderDetail(props) {
             <div className="button-wrapper">
               <Button
                 className={!currentTable.hasOwnProperty('Created') ? "btn-add" : "btn-charge"}
-                // onClick={() =>
-                //   !currentTable.hasOwnProperty('Created') ?
-                //     createBill({
-                //       Table: currentTable,
-                //       Orders: bill.Order,
-                //       TotalPrice: totalPrice,
-                //     })
-                //   :
-                //     chargeBill(bill.ID)
-                // }
+                onClick={() =>
+                  !currentTable.hasOwnProperty('Created') ?
+                    createBill({   
+                      // Table: currentTable.Table,
+                      // Orders: currentTable.Orders,
+                      // TotalPrice: totalPrice,
+                    })
+                  :
+                    chargeBill(currentTable.ID)
+                }
               >
                 {!currentTable.hasOwnProperty('Created') ? "Tạo Đơn" : "Thanh Toán"}
               </Button>

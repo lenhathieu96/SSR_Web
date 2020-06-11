@@ -4,11 +4,10 @@ import { Button } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCashRegister,
-  faChartBar,
   faUserCog,
 } from "@fortawesome/free-solid-svg-icons";
 
-import Logo from "../../../../Assets/Images/logo.png";
+import Logo from "../../../Assets/Images/logo.png";
 
 import './Header.scss'
 
@@ -43,21 +42,6 @@ function Header(props) {
                 className="nav-icon"
               />
               <p>THU NGÂN</p>
-           
-          </Button>
-          {/*btn-analytics*/}
-          <Button
-            variant="contained"
-            onClick={() => onChooseCategory(2)}
-            style={{ color: category === 2 ? "#283593": "rgba(0, 0, 0,0.54)" }}
-          >
-            
-              <FontAwesomeIcon
-                icon={faChartBar}
-                size={"2x"}
-                className="nav-icon"
-              />
-              <p>THỐNG KÊ</p>
            
           </Button>
           {/*btn-manager*/}

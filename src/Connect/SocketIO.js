@@ -4,4 +4,4 @@ const URL = 'https://ssrestaurant.herokuapp.com'
 
 const socket = io(URL)
 
-export default socket
+export default socket;

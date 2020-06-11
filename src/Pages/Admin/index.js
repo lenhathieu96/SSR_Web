@@ -1,10 +1,9 @@
 import React, {useState} from "react";
 import Grid from '@material-ui/core/Grid'
 
-import Header from './Common/Header/index'
-import Cashier from "./Features/Cashier/index";
-import Analytic from "./Features/Analytics/index"
-import Manager from "./Features/Manager/index"
+import Header from './Header/index'
+import Cashier from "./Features/Cashier";
+import Manager from "./Features/Manager"
 
 // import AdminRoute from '../../Route/AdminRoute'
 
@@ -24,8 +23,6 @@ function Admin() {
     switch (category) {
       case 1:
         return <Cashier/>
-      case 2:
-        return <Analytic/>
       default:
         return <Manager/>
     }
