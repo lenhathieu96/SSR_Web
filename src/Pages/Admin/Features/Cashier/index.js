@@ -2,24 +2,24 @@ import React, { useState, useEffect } from "react";
 import {useSelector, useDispatch} from 'react-redux'
 import {getTable, addOrder} from '../../../../actions/currenTableActions'
 
+import {toast} from 'react-toastify'
+  
 import Button from "@material-ui/core/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
+import LoadingModal from '../../Common/Modal/LoadingModal'
 import TableList from "./TableList";
 import Menu from "../../Common/Menu";
 import TableNull from "./SelectedTable/tableNulll"
 import TableDetail from "./SelectedTable"
 
 import axios from "axios";
-import socket from "../../../../Connect/SocketIO";
-import serverURL from '../../../../Connect/ServerURL'
+import {socket, URL} from "../../../../Connect";
 
 import "./Cashier.scss";
 
 function Cashier() {
-  const URL = serverURL+"food";
-
   const dispatch = useDispatch();
 
   const currentTable = useSelector(state=>state.currentTable)
@@ -27,9 +27,10 @@ function Cashier() {
   const [listTable, setListTable] = useState([]);
   const [menuData, setData] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
+  const [isLoading,setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(URL).then((res) => {
+    axios.get(URL+"/food").then((res) => {
       if (res.status === 200) {
         setData(res.data);
       }
@@ -48,25 +49,17 @@ function Cashier() {
         }
       }
       setListTable(tempTables)
+      setLoading(false)
     })
   },[]);
 
-  const createBill = (order) => {
-    // socket.emit("createBill", order);
-    // socket.on('createBillResult',(result)=>{
-    //   setCurrentTable({})
-    //   setShowMenu(false)
-    // })
-  };
-
-  const chargeBill = (billID)=>{
-    // console.log(billID)
-    // socket.emit('chargeBill',billID)
-    // socket.on('chargeBillResult',(result)=>{
-    //   setCurrentTable({})
-    // })
+  const notify = (text,isSuccess)=>{
+    toast.clearWaitingQueue()
+    isSuccess ?
+    toast.success(text)
+    :
+    toast.error(text)
   }
-
   //choose a table when click on icon table 
   const getCurrentTable = (number) => {
     const table = listTable.find(item=>item.Table === number)
@@ -84,6 +77,27 @@ function Cashier() {
       const action = addOrder(food)
       dispatch(action)
   };
+
+  const createBill = (order) => {
+    setLoading(true)
+    socket.emit("createBill", order);
+    socket.on('createBillResult',(result)=>{
+        removeCurrentTable()
+        setShowMenu(false)
+        setLoading(false)
+        result ? notify("Tạo Đơn Hàng Thành Công",true) : notify("Tạo Đơn Hàng Thất Bại",false)
+    })
+  };
+
+  const chargeBill = (billID)=>{
+    setLoading(true)
+    socket.emit('chargeBill',billID)
+    socket.on('chargeBillResult',(result)=>{
+      removeCurrentTable()
+      setLoading(false)
+      result ? notify("Thanh Toán Thành Công",true) : notify("Thanh Toán Thất Bại",false)
+    })
+  }
 
   return (
     <div className="Cashier-container">
@@ -150,6 +164,7 @@ function Cashier() {
           )}
         </div>
       </div>
+      <LoadingModal isLoading={isLoading}/>
     </div>
   );
 }

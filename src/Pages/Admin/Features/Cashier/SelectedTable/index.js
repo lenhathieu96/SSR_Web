@@ -58,9 +58,9 @@ function orderDetail(props) {
                 onClick={() =>
                   !currentTable.hasOwnProperty('Created') ?
                     createBill({   
-                      // Table: currentTable.Table,
-                      // Orders: currentTable.Orders,
-                      // TotalPrice: totalPrice,
+                      Table: currentTable.Table,
+                      Orders: currentTable.Orders,
+                      TotalPrice: totalPrice,
                     })
                   :
                     chargeBill(currentTable.ID)
@@ -71,6 +71,11 @@ function orderDetail(props) {
               {currentTable.hasOwnProperty('Created') ? (
                 <Button className="btn-edit">
                   <span>Tách Ghép Đơn</span>
+                </Button>
+              ) : null}
+              {currentTable.hasOwnProperty('Created') ? (
+                <Button className="btn-edit">
+                  <span>Cập Nhập</span>
                 </Button>
               ) : null}
             </div>

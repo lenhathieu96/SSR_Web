@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import './Kitchen.scss'
 import Order from "./Order";
-import socket from '../../Connect/SocketIO'
+import {socket} from '../../Connect'
 
 const Data = [];
 

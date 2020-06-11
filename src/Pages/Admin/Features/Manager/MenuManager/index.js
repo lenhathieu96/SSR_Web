@@ -3,42 +3,22 @@ import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
 
-import serverURL from '../../../../../Connect/ServerURL'
+import {URL} from '../../../../../Connect'
 import Menu from "../../../Common/Menu/index";
 import EditMenu from "./EditMenu";
 
 import "./MenuManager.scss";
 
-const menudata = [
-  {
-    _id:"554521 ",
-    name: "Bún Chả Lớn",
-    price: 200000,
-  },
-  {
-    _id:"12312",
-    name: "Bún Chả Nhỏ",
-    price: 780000,
-  },
-  {
-    _id:"121212",
-    name: "Bún Đậu",
-    price: 780000,
-  },
-];
-
-const URL = serverURL+"food";
-
 function MenuManager() {
 
-  const [data, setData] = useState(menudata);
+  const [data, setData] = useState([]);
   const [selectedFood, setSelectFood] = useState({name:"",price:""});
   
   const [filterString, setFilterString] = useState("");
 
   useEffect(() => {
     //get all data of menu
-    axios.get(URL).then((res) => {
+    axios.get(URL+'/food').then((res) => {
       if (res.status === 200) {
         setData(res.data);
       }

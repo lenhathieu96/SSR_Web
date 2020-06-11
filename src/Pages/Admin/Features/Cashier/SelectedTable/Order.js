@@ -62,57 +62,71 @@ function OrderItem(props) {
 
   return (
     <div>
-      <div className="OrderItem-container">
-        <p>{index}.</p>
-        <p className="OrderItem-container__name">{order.name}</p>
-        <div className="OrderItem-container__quantity">
-          {/* btn-minus */}
+      <div className="OrderDetail-container">
+        <div className = "OrderDetail-container__index">
+          <p className={order.served===order.quantity?"order--done":""}>{index}.</p>
+        </div>
+
+        <div className = "OrderDetail-container__name">
+          <p className={order.served===order.quantity?"order--done":""}>{order.name}</p>
+        </div>
+
+        <div className="OrderDetail-container__quantity">
           <IconButton
             aria-label="minus-one"
             style={{ marginBottom: 10 }}
             disabled={order.quantity > 1 ? false : true}
             onClick={() => {
-              if (order.served === 0 && order.done === 0) {
+              if (order.done < order.quantity) {
                 handleOnDecrease(order._id);
               }
             }}
           >
             <MinusIcon />
           </IconButton>
-
-          <p>{order.quantity}</p>
-
+          <p className={order.served===order.quantity?"order--done":""}>{order.quantity}</p>
           <IconButton
             aria-label="plus-one"
             onClick={() => {
-              if (order.served === 0 && order.done === 0) {
                 handleOnIncrease(order._id);
-              }
             }}
           >
             <PlusIcon />
           </IconButton>
         </div>
-        {/* price for all */}
-        <p className="OrderItem-container__price">
-          {order.totalPrice.toLocaleString()}
-        </p>
-        {/* btn-del */}
-        {order.served === 0 && order.done === 0 ? (
-          <IconButton
-            aria-label="delete"
-            onClick={() => handleOnDelete(order._id)}
-          >
-            <DeleteIcon />
-          </IconButton>
-        ) : null}
-        {order.served === 0 && order.done === 0 ? (
-          <IconButton aria-label="edit" onClick={() => handleOpenModal()}>
-            <EditIcon />
-          </IconButton>
-        ) : null}
+        {/* total price */}
+        <div className = "OrderDetail-container__price">
+          <p className={order.served===order.quantity?"order--done":""}>
+            {order.totalPrice.toLocaleString()}
+          </p>
+        </div>
+
+        <div className = "OrderDetail-container__buttons">
+          {order.served === 0 && order.done === 0 ? 
+            (
+              <IconButton
+              aria-label="delete"
+              onClick={() => handleOnDelete(order._id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            ) 
+            : null
+          }
+          {order.served === 0 && order.done === 0 ? 
+            (
+              <IconButton aria-label="edit" onClick={() => handleOpenModal()}>
+                <EditIcon />
+              </IconButton>
+            )
+            : null
+          }
+        </div>
       </div>
-      <div style={{ marginLeft: 20, fontStyle: "italic" }}>{order.note}</div>
+        
+      <div className = "OrderNote-container">
+        {order.note}
+      </div>
       
       {/* note modal */}
       <EditModal

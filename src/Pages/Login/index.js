@@ -3,14 +3,14 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 import View from './View'
-import serverURL from '../../Connect/ServerURL'
+import {URL} from '../../Connect'
 function Login(props) {
   let history = useHistory();
 
   const onLogin = (name, password) => {
     console.log(name, password);
     axios
-      .post(serverURL, { name, password })
+      .post(URL, { name, password })
       .then((res) => {
         // console.log(res.status);
         // console.log(name.slice(0, 3));

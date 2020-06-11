@@ -1,14 +1,12 @@
-$addColor: #00b551;
+$greenColor: #537A1C;
 $primaryColor: #283593;
 $secodaryColor: #e78200;
 
 .tableDetail-container{
     flex:1;
     display:flex;
-   
     flex-direction: column;
     background: white;
-    padding:5px;
     border-radius:20px;
     width:100%;
 
@@ -37,19 +35,22 @@ $secodaryColor: #e78200;
                 color: $primaryColor;
             }
         }
-        .OrderItem-container{
+        .OrderDetail-container{
             display: flex;
-            padding:5px;
-            justify-content: center;
             align-items: baseline;
+            justify-content: space-between;
+            &__index{
+                flex:0.1;
+                display:flex;
+                justify-content: center;
+            }
             &__name{
-                font-weight: bold;
                 flex:0.3;
-                margin-left: 10px;
+                font-weight: bold;   
             }
             &__quantity{
                 display: flex;
-                flex:0.4;
+                flex:0.2;
                 p{
                     margin: auto;
                 }
@@ -57,10 +58,21 @@ $secodaryColor: #e78200;
             &__price{
                 font-weight: bold;
                 color: $secodaryColor;
+                flex:0.2;
+            }
+            &__buttons{
                 flex:0.2
             }
-           
-        }
+            .order--done{
+                color:$greenColor
+            }
+        }   
+        .OrderNote-container{
+            margin-left: 1rem;
+            margin-top: 0;
+            font-style: italic;
+            font-size: small;
+        } 
     };
 
     &__tools{
@@ -91,7 +103,7 @@ $secodaryColor: #e78200;
             }
             .btn-add{
                 border-radius:0px 0px 15px 15px;
-                background:green;
+                background:$greenColor;
                 flex:1
             }
             .btn-charge{
