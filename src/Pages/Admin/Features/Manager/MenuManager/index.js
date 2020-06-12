@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
+import {toast} from 'react-toastify'
 
 import {URL} from '../../../../../Connect'
 import Menu from "../../../Common/Menu/index";
@@ -10,16 +11,17 @@ import EditMenu from "./EditMenu";
 import LoadingModal from '../../../Common/Modal/LoadingModal'
 
 import "./MenuManager.scss";
-
 function MenuManager() {
   const [sourceMenu, setSourceMenu] = useState([])
   const [filterMenu, setFilterMenu] = useState([]);
   const [selectedFood, setSelectFood] = useState({name:"",price:""});
   const [isLoading, setLoading] = useState(false);
 
+  const API_URL = URL+'/food'
+  
   useEffect(() => {
     setLoading(true)
-    axios.get(URL+'/food').then((res) => {
+    axios.get(API_URL).then((res) => {
       if (res.status === 200) {
         const menudata= res.data
         setSourceMenu(menudata);
@@ -27,38 +29,78 @@ function MenuManager() {
         setLoading(false)
       }
     });
-  }, []);
+  }, [API_URL]);
 
+  const notify = (text,isSuccess)=>{
+    toast.clearWaitingQueue()
+    isSuccess ?
+    toast.success(text)
+    :
+    toast.error(text)
+  }
   //on add button is clicked
   const onAddNew = (food) => {
-    axios.post(URL + "/addFood", food).then((res) => {
-      if (res.status === 200) {
-        const templist = [...sourceMenu];
-        templist.push(food);
-        setSourceMenu(templist);
-        setFilterMenu(templist)
-        alert("Thêm Sản Phẩm Thành Công");
-      } else {
-        alert("Thêm Sản Phẩm Thất Bại");
-      }
-    });
+    // setLoading(true)
+    axios.post(API_URL + "/addFood", food)
+      .then(res => {
+        setLoading(true)
+        if (res.status === 200) {
+          const templist = [...sourceMenu];
+          templist.push(food);
+          setSourceMenu(templist);
+          setFilterMenu(templist)
+          setLoading(false)
+        }
+      })
+      .catch((err)=>{
+        // console.log(err.response.data);
+        notify(err.response.data,false)
+        setLoading(false)
+      });
   };
 
   //on update button is clicked
   const onUpdate = (id, food) => {
-    axios.post(URL + "/updateFood", { id, food }).then((res) => {
+    setLoading(true)
+    axios.post(API_URL + "/updateFood", { id, food })
+    .then((res) => {
       if (res.status === 200) {
-        alert("Chỉnh Sửa Thành Công");
-      } else {
-        alert("Chỉnh Sửa Thất Bại");
+        const templist = [...sourceMenu]
+        const index = templist.findIndex(item=>item._id===id)
+        food.price = parseInt(food.price)
+        templist[index]= {...food}
+        setSourceMenu(templist)
+        setFilterMenu(templist)
+        notify("Chỉnh Sửa Thành Công",true)
+        setLoading(false)
       }
+    })
+    .catch((err)=>{
+      // console.log(err.response.data);
+      notify(err.response.data,false)
+      setLoading(false)
     });
   };
-
-  //on delete button is clicked
   const onDelete = (foodID) => {
-    console.log(foodID);
+    setLoading(true)
+    axios.post(API_URL + "/deleteFood",foodID)
+      .then((res)=>{
+        if(res.status ===200){
+          const templist = [...sourceMenu]
+          const filter = templist.filter(item=>item._id!==foodID)
+          setSourceMenu(filter)
+          setFilterMenu(filter)
+          notify("Chỉnh Sửa Thành Công",true)
+          setLoading(false)
+        }
+      })
+      .catch((err)=>{
+        // console.log(err.response.data);
+        notify(err.response.data,false)
+        setLoading(false)
+      });
   };
+
 
   //on cancel button is clicked
   const onCancelSelect = () => {

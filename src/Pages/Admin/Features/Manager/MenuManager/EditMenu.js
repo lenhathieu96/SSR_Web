@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import PropTypes from "prop-types";
 
 import Button from "@material-ui/core/Button";
@@ -13,17 +13,30 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import AddIcon from "@material-ui/icons/Add";
 import UpdateIcon from "@material-ui/icons/Update";
 import DeleteIcon from "@material-ui/icons/Delete";
+import ConfirmModal  from '../../../Common/Modal/ConfirmModal'
 
 EditMenu.propTypes = {
   selectedFood: PropTypes.object.isRequired,
 };
 
+
+
+
 function EditMenu(props) {
   const { selectedFood, onAddNew, onUpdate, onDelete, onCancelSelect } = props;
-
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
   const initalValues ={
     name:selectedFood.name,
     price: selectedFood.price
+  }
+    
+  const handleCloseModal=() => {
+    setShowConfirmModal(false)
+  }
+
+  const handleAccept = () => {
+    onDelete(selectedFood._id)
+    handleCloseModal()
   }
 
   return (
@@ -81,7 +94,7 @@ function EditMenu(props) {
                     <Button 
                       startIcon={<DeleteIcon />} 
                       className="btn--del"
-                      onClick={()=>onDelete(selectedFood._id)}
+                      onClick={()=>setShowConfirmModal(true)}
                     >
                       Xóa
                     </Button>
@@ -98,6 +111,8 @@ function EditMenu(props) {
           );
         }}
       </Formik>
+      <ConfirmModal isOpen={showConfirmModal} handleCloseModal={handleCloseModal} handleAccept={handleAccept} />
+
     </div>
   );
 }
