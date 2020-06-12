@@ -3,9 +3,6 @@ import ReactDOM from 'react-dom';
 import App from './App';
 
 import './index.css'
-
-import 'typeface-maven-pro'
-import 'typeface-roboto';
 import * as serviceWorker from './serviceWorker';
 
 
