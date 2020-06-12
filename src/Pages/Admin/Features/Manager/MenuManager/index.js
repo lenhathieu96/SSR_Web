@@ -7,20 +7,24 @@ import {URL} from '../../../../../Connect'
 import Menu from "../../../Common/Menu/index";
 import EditMenu from "./EditMenu";
 
+import LoadingModal from '../../../Common/Modal/LoadingModal'
+
 import "./MenuManager.scss";
 
 function MenuManager() {
-
-  const [data, setData] = useState([]);
+  const [sourceMenu, setSourceMenu] = useState([])
+  const [filterMenu, setFilterMenu] = useState([]);
   const [selectedFood, setSelectFood] = useState({name:"",price:""});
-  
-  const [filterString, setFilterString] = useState("");
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    //get all data of menu
+    setLoading(true)
     axios.get(URL+'/food').then((res) => {
       if (res.status === 200) {
-        setData(res.data);
+        const menudata= res.data
+        setSourceMenu(menudata);
+        setFilterMenu(menudata);
+        setLoading(false)
       }
     });
   }, []);
@@ -29,9 +33,10 @@ function MenuManager() {
   const onAddNew = (food) => {
     axios.post(URL + "/addFood", food).then((res) => {
       if (res.status === 200) {
-        const templist = data;
+        const templist = [...sourceMenu];
         templist.push(food);
-        setData(templist);
+        setSourceMenu(templist);
+        setFilterMenu(templist)
         alert("Thêm Sản Phẩm Thành Công");
       } else {
         alert("Thêm Sản Phẩm Thất Bại");
@@ -51,21 +56,27 @@ function MenuManager() {
   };
 
   //on delete button is clicked
-  const onDelete = (food) => {
-    console.log("delete food");
+  const onDelete = (foodID) => {
+    console.log(foodID);
   };
 
   //on cancel button is clicked
   const onCancelSelect = () => {
-    setSelectFood({});
+    setSelectFood({name:"",price:""});
   };
 
   //search data
-  const searchData = () => {
-    const filterlist = data.filter((item) =>
-      item.name.toLowerCase().includes(filterString.toLowerCase())
-    );
-    setData(filterlist);
+  const search = (text) => {
+   if(text !== ''){
+     const newData = sourceMenu.filter((item )=> {
+       const itemData = item.name.toUpperCase()
+       const textData = text.toUpperCase()
+       return itemData.indexOf(textData)>-1
+     })
+     setFilterMenu(newData)
+   }else{
+     setFilterMenu(sourceMenu)
+   }
   };
 
   return (
@@ -73,7 +84,7 @@ function MenuManager() {
       <div className="MenuManager-container__detail">
         {/* render all items of menu */}
         <div className = "Menu-wrapper">
-          <Menu onSelectFood={setSelectFood} data={data} />
+          <Menu onSelectFood={setSelectFood} data={filterMenu} />
         </div>
         {/* crud item of menu */}
         <EditMenu
@@ -92,16 +103,11 @@ function MenuManager() {
         <Input
           placeholder="Nhập Tên Sản Phẩm"
           onChange={(event) => {
-            // search only input not null
-            if (event.target.value !== "") {
-              setFilterString(event.target.value);
-              searchData();
-            } else {
-              setData(data);
-            }
+            search(event.target.value)
           }}
         />
       </div>
+      <LoadingModal isLoading={isLoading} />
     </div>
   );
 }

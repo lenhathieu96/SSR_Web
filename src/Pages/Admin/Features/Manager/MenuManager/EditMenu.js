@@ -21,6 +21,11 @@ EditMenu.propTypes = {
 function EditMenu(props) {
   const { selectedFood, onAddNew, onUpdate, onDelete, onCancelSelect } = props;
 
+  const initalValues ={
+    name:selectedFood.name,
+    price: selectedFood.price
+  }
+
   return (
     <div className="EditMenu-wrapper">
       {/* title */}
@@ -29,14 +34,14 @@ function EditMenu(props) {
       </Typography>
       {/* form */}
       <Formik
-        initialValues={{
-          name: selectedFood.name,
-          price: selectedFood.price,
-        }}
+        initialValues={initalValues}
         enableReinitialize
+        onSubmit={values=>{
+          selectedFood.name===""?onAddNew(values):onUpdate(selectedFood._id,values)
+        }}
+        
       >
-        {(formikProps) => {
-          const { values } = formikProps;
+        {() => {
           return (
             <Form>
               <FormGroup className="input-wrapper">
@@ -55,8 +60,7 @@ function EditMenu(props) {
                   type="text"
                 />
               </FormGroup>
-
-              <FormControl className="btn-wrapper">
+              <FormControl className = "btn-wrapper">
                 {/* submit button */}
                 <Button
                   type="submit"
@@ -69,16 +73,24 @@ function EditMenu(props) {
                 >
                   {selectedFood.name !== "" ? "Chỉnh Sửa" : "Thêm Mới"}
                 </Button>
+                
                 {/* btn-delete */}
-                {selectedFood.name !== "" ? (
-                  <Button startIcon={<DeleteIcon />} className="btn--del">
-                    Xóa
-                  </Button>
-                ) : null}
+                {
+                  selectedFood.name !== "" ? 
+                  (
+                    <Button 
+                      startIcon={<DeleteIcon />} 
+                      className="btn--del"
+                      onClick={()=>onDelete(selectedFood._id)}
+                    >
+                      Xóa
+                    </Button>
+                  ) 
+                  : null
+                }
+                
                 {/* btn-reset */}
-                <Button className="btn" startIcon={<CancelIcon />} onClick = {()=>{
-                  onCancelSelect()
-                }}>
+                <Button className="btn" type="reset" startIcon={<CancelIcon />} onClick={()=>onCancelSelect()}>
                   Hủy Bỏ
                 </Button>
               </FormControl>
