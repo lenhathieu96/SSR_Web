@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import PropTypes from "prop-types";
 
 import Button from "@material-ui/core/Button";
@@ -13,13 +13,33 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import AddIcon from "@material-ui/icons/Add";
 import UpdateIcon from "@material-ui/icons/Update";
 import DeleteIcon from "@material-ui/icons/Delete";
+import ConfirmModal  from '../../../Common/Modal/ConfirmModal'
 
 EditMenu.propTypes = {
   selectedFood: PropTypes.object.isRequired,
 };
 
+
+
+
 function EditMenu(props) {
   const { selectedFood, onAddNew, onUpdate, onDelete, onCancelSelect } = props;
+  
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
+
+  const initalValues ={
+    name:selectedFood.name,
+    price: selectedFood.price
+  }
+    
+  const handleCloseModal=() => {
+    setShowConfirmModal(false)
+  }
+
+  const handleAccept = () => {
+    onDelete(selectedFood._id)
+    handleCloseModal()
+  }
 
   return (
     <div className="EditMenu-wrapper">
@@ -29,14 +49,14 @@ function EditMenu(props) {
       </Typography>
       {/* form */}
       <Formik
-        initialValues={{
-          name: selectedFood.name,
-          price: selectedFood.price,
-        }}
+        initialValues={initalValues}
         enableReinitialize
+        onSubmit={values=>{
+          selectedFood.name===""?onAddNew(values):onUpdate(selectedFood._id,values)
+        }}
+        
       >
-        {(formikProps) => {
-          const { values } = formikProps;
+        {() => {
           return (
             <Form>
               <FormGroup className="input-wrapper">
@@ -55,8 +75,7 @@ function EditMenu(props) {
                   type="text"
                 />
               </FormGroup>
-
-              <FormControl className="btn-wrapper">
+              <FormControl className = "btn-wrapper">
                 {/* submit button */}
                 <Button
                   type="submit"
@@ -69,16 +88,24 @@ function EditMenu(props) {
                 >
                   {selectedFood.name !== "" ? "Chỉnh Sửa" : "Thêm Mới"}
                 </Button>
+                
                 {/* btn-delete */}
-                {selectedFood.name !== "" ? (
-                  <Button startIcon={<DeleteIcon />} className="btn--del">
-                    Xóa
-                  </Button>
-                ) : null}
+                {
+                  selectedFood.name !== "" ? 
+                  (
+                    <Button 
+                      startIcon={<DeleteIcon />} 
+                      className="btn--del"
+                      onClick={()=>setShowConfirmModal(true)}
+                    >
+                      Xóa
+                    </Button>
+                  ) 
+                  : null
+                }
+                
                 {/* btn-reset */}
-                <Button className="btn" startIcon={<CancelIcon />} onClick = {()=>{
-                  onCancelSelect()
-                }}>
+                <Button className="btn" type="reset" startIcon={<CancelIcon />} onClick={()=>onCancelSelect()}>
                   Hủy Bỏ
                 </Button>
               </FormControl>
@@ -86,6 +113,12 @@ function EditMenu(props) {
           );
         }}
       </Formik>
+      <ConfirmModal 
+        isOpen={showConfirmModal} 
+        handleCloseModal={handleCloseModal} 
+        handleAccept={handleAccept} 
+      />
+
     </div>
   );
 }

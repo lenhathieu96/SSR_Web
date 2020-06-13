@@ -1,35 +1,38 @@
 import React, { useState, useEffect } from "react";
+import {useSelector, useDispatch} from 'react-redux'
+import {getTable, addOrder} from '../../../../actions/currenTableActions'
+
+import {toast} from 'react-toastify'
+  
 import Button from "@material-ui/core/Button";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
+import LoadingModal from '../../Common/Modal/LoadingModal'
 import TableList from "./TableList";
 import Menu from "../../Common/Menu";
 import TableNull from "./SelectedTable/tableNulll"
 import TableDetail from "./SelectedTable"
 
-import socket from "../../../../Connect/SocketIO";
-import serverURL from '../../../../Connect/ServerURL'
+import axios from "axios";
+import {socket, URL} from "../../../../Connect";
 
 import "./Cashier.scss";
 
 function Cashier() {
-  const URL = serverURL+"food";
+  const dispatch = useDispatch();
+
+  const currentTable = useSelector(state=>state.currentTable)
 
   const [listTable, setListTable] = useState([]);
-
-  const [currentTable, setCurrentTable] = useState({});
-
   const [menuData, setData] = useState([]);
-
   const [showMenu, setShowMenu] = useState(false);
+  const [isLoading,setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(URL).then((res) => {
+    axios.get(URL+"/food").then((res) => {
       if (res.status === 200) {
         setData(res.data);
-        
       }
     });
     const tables = new Array(30)
@@ -46,100 +49,84 @@ function Cashier() {
         }
       }
       setListTable(tempTables)
+      setLoading(false)
     })
   },[]);
 
+  const notify = (text,isSuccess)=>{
+    toast.clearWaitingQueue()
+    isSuccess ?
+    toast.success(text)
+    :
+    toast.error(text)
+  }
+  //choose a table when click on icon table 
+  const getCurrentTable = (number) => {
+    const table = listTable.find(item=>item.Table === number)
+    const action = getTable(table)
+    dispatch(action)
+  };
+
+  const removeCurrentTable = () => {
+    const action = getTable({});
+    dispatch(action)
+  }
+
+  // choose a food add to bill on click in menu
+  const setSelectFood = (food) => {
+      const action = addOrder(food)
+      dispatch(action)
+  };
+
   const createBill = (order) => {
+    setLoading(true)
     socket.emit("createBill", order);
     socket.on('createBillResult',(result)=>{
-      setCurrentTable({})
-      setShowMenu(false)
+        removeCurrentTable()
+        setShowMenu(false)
+        setLoading(false)
+        result ? notify("Tạo Đơn Hàng Thành Công",true) : notify("Tạo Đơn Hàng Thất Bại",false)
     })
   };
 
   const chargeBill = (billID)=>{
-    // console.log(billID)
+    setLoading(true)
     socket.emit('chargeBill',billID)
     socket.on('chargeBillResult',(result)=>{
-      setCurrentTable({})
+      removeCurrentTable()
+      setLoading(false)
+      result ? notify("Thanh Toán Thành Công",true) : notify("Thanh Toán Thất Bại",false)
     })
   }
 
-  //choose a table when click on icon table 
-  const getCurrentTable = (number) => {
-    const table = listTable.find(item=>item.Table === number)
-    setCurrentTable(table) 
-  };
+  const updateBill = (billID, orders)=>{
+    setLoading(true);
+    socket.emit('updateBill', billID, orders);
+    socket.on('updateBillResult', (result) => {
+      removeCurrentTable()
+      setLoading(false);
+      result ? notify("Cập Nhập Thành Công",true) : notify("Cập Nhập Thất Bại",false)
+    });
+  }
 
-  // choose a food add to bill on click in menu
-  const setSelectFood = (food) => {
-    let tempBill ;
-    if(!currentTable.hasOwnProperty('Orders')){
-      tempBill = {...currentTable,Orders:[]}
-      food.done = 0;
-      food.quantity = 1;
-      food.served = 0;
-      food.totalPrice = food.price;
-      food.note = "";
-      tempBill.Orders.push(food)
-    }else{
-      tempBill = {...currentTable}
-      if(tempBill.Orders.find(item=>item._id===food._id)){
-        const orders = tempBill.Orders
-        const index = orders.findIndex(item => item._id === food._id)
-        orders[index].quantity += 1
-        orders[index].totalPrice = orders[index].price * orders[index].quantity;
-      }else{
-        food.done = 0;
-        food.quantity = 1;
-        food.served = 0;
-        food.totalPrice = food.price;
-        food.note = "";
-        tempBill.Orders.push(food)
-      }
-    }
-    setCurrentTable(tempBill)
-  };
+  const deleteBill = (billID)=>{
+    setLoading(true)
+    socket.emit('deleteBill',billID)
+    socket.on('deleteBillResult', (result)=>{
+      removeCurrentTable()
+      setLoading(false)
+      result ? notify("Xoá Đơn Thành Công",true) : notify("Xoá Đơn Thất Bại",false)
+    })
+  }
 
-  
-  // //increase quantity and price for order
-  const increaseOrder = (id) => {
-      let tempBill = {...currentTable};
-      let orders = tempBill.Orders
-      const index = orders.findIndex((item) => item._id === id);
-      orders[index].quantity+=1;
-      orders[index].totalPrice = orders[index].price * orders[index].quantity;
-      setCurrentTable(tempBill);
-  };
-
-  // //decrease quantity and price for order
-  const decreaseOrder = (id) => {
-      let tempBill = {...currentTable};
-      let orders = tempBill.Orders
-      const index = orders.findIndex((item) => item._id === id);
-      orders[index].totalPrice = orders[index].price * orders[index].quantity;
-      orders[index].quantity -= 1;
-      setCurrentTable(tempBill);
-  };
-
-  // //delete Order in Bill when create new Bill
-  const delOrder = (id) => {
-    if(!currentTable.hasOwnProperty('Created')){
-      let bill = {...currentTable};
-      let orders = bill.Orders
-      bill.Orders = orders.filter((item) => item._id !== id)
-      setCurrentTable(bill)
-    }
-  };
-
-  const noteOrder = (id,text)=>{
-    if(!currentTable.hasOwnProperty('Created')){
-      let bill = {...currentTable};
-      let orders = bill.Orders
-      const index = orders.findIndex((item) => item._id === id);
-      orders[index].note = text
-      setCurrentTable(bill)
-    }
+  const switchTable=(billID,chosenTable) => {
+    setLoading(true);
+    socket.emit('switchTable', billID, chosenTable);
+    socket.on('switchTableResult', (result) => {
+      removeCurrentTable()
+      setLoading(false);
+      result ? notify("Chuyển Bàn Thành Công",true) : notify("Chuyển Bàn Thất Bại",false)
+    });
   }
 
   return (
@@ -188,7 +175,7 @@ function Cashier() {
               icon={faTimes}
               size={"lg"}
               style={{ color: "white", marginLeft: 100 }}
-              onClick={() => setCurrentTable({})}
+              onClick={() => removeCurrentTable()}
             /> 
           </div>
           :null  
@@ -199,19 +186,19 @@ function Cashier() {
           {currentTable.hasOwnProperty('Table') ? (
             <TableDetail
               currentTable={currentTable}
+              emptyTables = {listTable.filter(table=>Object.keys(table).length===1)}
               createBill={createBill}
               chargeBill={chargeBill}
-
-              increaseOrder={increaseOrder}
-              decreaseOrder={decreaseOrder}
-              noteOrder={noteOrder}
-              delOrder={delOrder}
+              updateBill={updateBill}
+              deleteBill={deleteBill}
+              switchTable={switchTable}
             />
           ) : (
             <TableNull />
           )}
         </div>
       </div>
+      <LoadingModal isLoading={isLoading}/>
     </div>
   );
 }

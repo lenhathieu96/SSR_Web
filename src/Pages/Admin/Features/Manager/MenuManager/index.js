@@ -2,90 +2,123 @@ import React, { useState, useEffect } from "react";
 import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
+import {toast} from 'react-toastify'
 
-import serverURL from '../../../../../Connect/ServerURL'
+import {URL} from '../../../../../Connect'
 import Menu from "../../../Common/Menu/index";
 import EditMenu from "./EditMenu";
 
+import LoadingModal from '../../../Common/Modal/LoadingModal'
+
 import "./MenuManager.scss";
-
-const menudata = [
-  {
-    _id:"554521 ",
-    name: "Bún Chả Lớn",
-    price: 200000,
-  },
-  {
-    _id:"12312",
-    name: "Bún Chả Nhỏ",
-    price: 780000,
-  },
-  {
-    _id:"121212",
-    name: "Bún Đậu",
-    price: 780000,
-  },
-];
-
-const URL = serverURL+"food";
-
 function MenuManager() {
-
-  const [data, setData] = useState(menudata);
+  const [sourceMenu, setSourceMenu] = useState([])
+  const [filterMenu, setFilterMenu] = useState([]);
   const [selectedFood, setSelectFood] = useState({name:"",price:""});
-  
-  const [filterString, setFilterString] = useState("");
+  const [isLoading, setLoading] = useState(false);
 
+  const API_URL = URL+'/food'
+  
   useEffect(() => {
-    //get all data of menu
-    axios.get(URL).then((res) => {
+    setLoading(true)
+    axios.get(API_URL).then((res) => {
       if (res.status === 200) {
-        setData(res.data);
+        const menudata= res.data
+        setSourceMenu(menudata);
+        setFilterMenu(menudata);
+        setLoading(false)
       }
     });
-  }, []);
+  }, [API_URL]);
 
+  const notify = (text,isSuccess)=>{
+    toast.clearWaitingQueue()
+    isSuccess ?
+    toast.success(text)
+    :
+    toast.error(text)
+  }
   //on add button is clicked
   const onAddNew = (food) => {
-    axios.post(URL + "/addFood", food).then((res) => {
-      if (res.status === 200) {
-        const templist = data;
-        templist.push(food);
-        setData(templist);
-        alert("Thêm Sản Phẩm Thành Công");
-      } else {
-        alert("Thêm Sản Phẩm Thất Bại");
-      }
-    });
+    // setLoading(true)
+    axios.post(API_URL + "/addFood", food)
+      .then(res => {
+        setLoading(true)
+        if (res.status === 200) {
+          const templist = [...sourceMenu];
+          templist.push(food);
+          setSourceMenu(templist);
+          setFilterMenu(templist)
+          setLoading(false)
+        }
+      })
+      .catch((err)=>{
+        // console.log(err.response.data);
+        notify(err.response.data,false)
+        setLoading(false)
+      });
   };
 
   //on update button is clicked
   const onUpdate = (id, food) => {
-    axios.post(URL + "/updateFood", { id, food }).then((res) => {
+    setLoading(true)
+    axios.post(API_URL + "/updateFood", { id, food })
+    .then((res) => {
       if (res.status === 200) {
-        alert("Chỉnh Sửa Thành Công");
-      } else {
-        alert("Chỉnh Sửa Thất Bại");
+        const templist = [...sourceMenu]
+        const index = templist.findIndex(item=>item._id===id)
+        food.price = parseInt(food.price)
+        templist[index]= {...food}
+        setSourceMenu(templist)
+        setFilterMenu(templist)
+        notify("Chỉnh Sửa Thành Công",true)
+        setLoading(false)
       }
+    })
+    .catch((err)=>{
+      // console.log(err.response.data);
+      notify(err.response.data,false)
+      setLoading(false)
     });
   };
-
-  //on delete button is clicked
-  const onDelete = (food) => {
-    console.log("delete food");
+  const onDelete = (foodID) => {
+    setLoading(true)
+    axios.post(API_URL + "/deleteFood",foodID)
+      .then((res)=>{
+        if(res.status ===200){
+          const templist = [...sourceMenu]
+          const filter = templist.filter(item=>item._id!==foodID)
+          setSourceMenu(filter)
+          setFilterMenu(filter)
+          notify("Chỉnh Sửa Thành Công",true)
+          setLoading(false)
+        }
+      })
+      .catch((err)=>{
+        // console.log(err.response.data);
+        notify(err.response.data,false)
+        setLoading(false)
+      });
   };
+
 
   //on cancel button is clicked
   const onCancelSelect = () => {
-    setSelectFood({});
+    setSelectFood({name:"",price:""});
   };
 
   //search data
-  const searchData = () => {
-    const filterlist = data.filter((item) =>
-      item.name.toLowerCase().includes(filterString.toLowerCase())
-    );
-    setData(filterlist);
+  const search = (text) => {
+   if(text !== ''){
+     const newData = sourceMenu.filter((item )=> {
+       const itemData = item.name.toUpperCase()
+       const textData = text.toUpperCase()
+       return itemData.indexOf(textData)>-1
+     })
+     setFilterMenu(newData)
+   }else{
+     setFilterMenu(sourceMenu)
+   }
   };
 
   return (
@@ -93,7 +126,7 @@ function MenuManager() {
       <div className="MenuManager-container__detail">
         {/* render all items of menu */}
         <div className = "Menu-wrapper">
-          <Menu onSelectFood={setSelectFood} data={data} />
+          <Menu onSelectFood={setSelectFood} data={filterMenu} />
         </div>
         {/* crud item of menu */}
         <EditMenu
@@ -112,16 +145,11 @@ function MenuManager() {
         <Input
           placeholder="Nhập Tên Sản Phẩm"
           onChange={(event) => {
-            // search only input not null
-            if (event.target.value !== "") {
-              setFilterString(event.target.value);
-              searchData();
-            } else {
-              setData(data);
-            }
+            search(event.target.value)
           }}
         />
       </div>
+      <LoadingModal isLoading={isLoading} />
     </div>
   );
 }
