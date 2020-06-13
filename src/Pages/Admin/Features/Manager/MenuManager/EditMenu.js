@@ -24,7 +24,9 @@ EditMenu.propTypes = {
 
 function EditMenu(props) {
   const { selectedFood, onAddNew, onUpdate, onDelete, onCancelSelect } = props;
+  
   const [showConfirmModal, setShowConfirmModal] = useState(false)
+
   const initalValues ={
     name:selectedFood.name,
     price: selectedFood.price
@@ -111,7 +113,11 @@ function EditMenu(props) {
           );
         }}
       </Formik>
-      <ConfirmModal isOpen={showConfirmModal} handleCloseModal={handleCloseModal} handleAccept={handleAccept} />
+      <ConfirmModal 
+        isOpen={showConfirmModal} 
+        handleCloseModal={handleCloseModal} 
+        handleAccept={handleAccept} 
+      />
 
     </div>
   );

@@ -99,6 +99,36 @@ function Cashier() {
     })
   }
 
+  const updateBill = (billID, orders)=>{
+    setLoading(true);
+    socket.emit('updateBill', billID, orders);
+    socket.on('updateBillResult', (result) => {
+      removeCurrentTable()
+      setLoading(false);
+      result ? notify("Cập Nhập Thành Công",true) : notify("Cập Nhập Thất Bại",false)
+    });
+  }
+
+  const deleteBill = (billID)=>{
+    setLoading(true)
+    socket.emit('deleteBill',billID)
+    socket.on('deleteBillResult', (result)=>{
+      removeCurrentTable()
+      setLoading(false)
+      result ? notify("Xoá Đơn Thành Công",true) : notify("Xoá Đơn Thất Bại",false)
+    })
+  }
+
+  const switchTable=(billID,chosenTable) => {
+    setLoading(true);
+    socket.emit('switchTable', billID, chosenTable);
+    socket.on('switchTableResult', (result) => {
+      removeCurrentTable()
+      setLoading(false);
+      result ? notify("Chuyển Bàn Thành Công",true) : notify("Chuyển Bàn Thất Bại",false)
+    });
+  }
+
   return (
     <div className="Cashier-container">
       {/*left-side*/}
@@ -156,8 +186,12 @@ function Cashier() {
           {currentTable.hasOwnProperty('Table') ? (
             <TableDetail
               currentTable={currentTable}
+              emptyTables = {listTable.filter(table=>Object.keys(table).length===1)}
               createBill={createBill}
               chargeBill={chargeBill}
+              updateBill={updateBill}
+              deleteBill={deleteBill}
+              switchTable={switchTable}
             />
           ) : (
             <TableNull />
