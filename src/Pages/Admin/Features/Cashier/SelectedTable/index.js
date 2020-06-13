@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 
 import Order from "./Order";
+
+import color from '../../../../../utils/Color'
 import "./SelectedTable.scss";
 
 orderDetail.propTypes = {
@@ -48,7 +50,7 @@ function orderDetail(props) {
           <div className="tableDetail-container__tools">
             <div className="total-price">
               <p>Tổng Tiền</p>
-              <p style={{ textAlign: "right", color: "#e78200" }}>
+              <p style={{ textAlign: "right", color: color.secondary }}>
                 {totalPrice.toLocaleString()}
               </p>
             </div>
@@ -68,14 +70,23 @@ function orderDetail(props) {
               >
                 {!currentTable.hasOwnProperty('Created') ? "Tạo Đơn" : "Thanh Toán"}
               </Button>
+              {
+                currentTable.hasOwnProperty('Created') ? 
+                  (
+                    <Button style={{background:color.green}}>
+                      <span>Cập Nhập</span>
+                    </Button>
+                  ) 
+                  : null
+              }
               {currentTable.hasOwnProperty('Created') ? (
-                <Button className="btn-edit">
-                  <span>Tách Ghép Đơn</span>
+                <Button style={{background:color.secondary}}>
+                  <span>Chuyển Bàn</span>
                 </Button>
               ) : null}
               {currentTable.hasOwnProperty('Created') ? (
-                <Button className="btn-edit">
-                  <span>Cập Nhập</span>
+                <Button style={{background:color.red}}>
+                  <span>Huỷ Đơn</span>
                 </Button>
               ) : null}
             </div>
