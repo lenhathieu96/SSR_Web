@@ -1,40 +1,67 @@
-import React, {useState} from "react";
+import React from "react";
 import Grid from '@material-ui/core/Grid'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCashRegister,
+  faUserCog,
+} from "@fortawesome/free-solid-svg-icons";
+import{
+  Switch,
+  Route,
+  useRouteMatch,
+  Link
+} from  'react-router-dom'
 
-import Header from './Header/index'
 import Cashier from "./Features/Cashier";
 import Manager from "./Features/Manager"
 
-// import AdminRoute from '../../Route/AdminRoute'
-
-// import socket from "../../Socket";
-
+import Logo from "../../Assets/Images/logo.png";
 import "./Admin.scss";
 
 
 function Admin() {
-  const [category,setCategory] = useState(1)
+  let {path, url} = useRouteMatch()
   
-  const onChooseCategory = (number)=>{
-    setCategory(number)
-  }
-
-  const renderSwitch = () => {
-    switch (category) {
-      case 1:
-        return <Cashier/>
-      default:
-        return <Manager/>
-    }
-  }
-
+  
   return (
     <Grid style ={{height:"100%"}}>
-      {/* header */}
-     <Header onChooseCategory = {onChooseCategory} category = {category}/>
-      {/* body */}
-     <div className="body">
-        {renderSwitch()}
+      <div className="Admin__header">
+        <div className="logo">
+          <img src={Logo} alt ="logo" />
+        </div>
+
+        <div className="nav">
+          <Link to={url} className="nav-item">
+            <div className = "nav-item__wrapper">
+              <FontAwesomeIcon
+                icon={faCashRegister}
+                size={"2x"}
+                className="icon"
+              />
+              <p>THU NGÂN</p>
+            </div>
+             
+          </Link>
+
+          <Link to={`${url}/Manager`}  className="nav-item">
+            <div className = "nav-item__wrapper">
+              <FontAwesomeIcon
+                icon={faUserCog}
+                size={"2x"}
+                className="icon"
+              />
+              <p>QUẢN LÝ</p>
+            </div>
+          </Link>
+         <span className="indicator"/> 
+        </div>
+      </div>
+
+      <div className="Admin__body">   
+        <Switch>
+          <Route exact path={path} component={<Cashier/>} />
+          <Route exact path={`${path}/Manager`} component={<Manager/>} />
+        </Switch>
       </div>  
     </Grid>
   );
