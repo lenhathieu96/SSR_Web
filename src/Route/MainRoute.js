@@ -14,8 +14,8 @@ export default function MainRoute() {
   return (
     <Router>
       <Switch>
-        <PrivateRoute exact path="/:name/quanly" children={<Admin />} />
-        <PrivateRoute path="/:name/bep" children={<Kitchen />} />
+        <PrivateRoute exact path="/:name/Cashier" children={<Admin />} />
+        <PrivateRoute path="/:name/kitchen" children={<Kitchen />} />
         <Route path="/" children={<Login />} />
       </Switch>
     </Router>
