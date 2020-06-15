@@ -1,5 +1,4 @@
 import React, { useState,useEffect } from "react";
-
 import Grid from '@material-ui/core/Grid'
 import {
   faHistory,
@@ -10,10 +9,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-
-import './Kitchen.scss'
-import Order from "./Order";
 import {socket} from '../../Connect'
+
+import Order from "./Order";
+
+import color from '../../utils/Color'
+import './Kitchen.scss'
 
 const Data = [];
 
@@ -23,8 +24,8 @@ function Kitchen() {
  
   useEffect(()=>{
     socket.emit('allBill')
-    socket.on('allBillResult',(order)=>{
-      setData(order)
+    socket.on('allBillResult',(orders)=>{
+      setData(orders)
     })
   },[])
   //Khi làm xong 1 món
@@ -46,14 +47,15 @@ function Kitchen() {
   const onServed_all = (billId,orderId) => {
     socket.emit('allServed',billId,orderId)
   };
+  
 
   return (
     <div className = "Kitchen-container">
       <div className="Kitchen-container__body">
-      {/* block bên trái */}
-        <Grid xs ={6} className="process-container">
+      {/*left-block */}
+        <Grid item xs ={6} className="process-container">
 
-          <div className="process-container__header" style={{ backgroundColor: "#283593" }}>
+          <div className="process-container__header" style={{ backgroundColor: color.primary }}>
             <FontAwesomeIcon
               icon={faHistory}
               size={"lg"}
@@ -69,16 +71,17 @@ function Kitchen() {
             />
           </div>
 
-          {/* Danh sách các món chờ chế biến */}
+          {/* orders wait to cook*/}
           <div className="process-container__body">
-          {/* render các phần tử có giá trị quantity >0 */}
+          <div className= "wrapper">
           {data.map((item, index) => (
             <div key={index}>
-              {item.Order.filter((doneOrder) => doneOrder.done === 0 && doneOrder.served===0).map(
+              {item.Orders.filter((doneOrder) => doneOrder.done < doneOrder.quantity && doneOrder.served===0).map(
                 (order, order_index) => (
                   <Order item={order}
                   billID={item.ID}
-                  table={item.Table} 
+                  table={item.Table}
+                  createTime={item.Created} 
                   key={order_index} 
                   isDone={false}
                   onDone_one={onDone_one}
@@ -89,8 +92,11 @@ function Kitchen() {
               </div>
             ))}
           </div>
+          
+          </div>
         </Grid>
-        {/* block bên phải */}
+
+        {/* right-block */}
         <Grid xs ={6} className="process-container">
 
           <div className="process-container__header" style={{ backgroundColor: "#00b551" }}>
@@ -108,16 +114,17 @@ function Kitchen() {
             />
           </div>
 
-           {/* Danh sách các món đã làm xong chờ phục vụ */}
+          {/* Orders wait to serve */}
           <div className="process-container__body" style={{borderColor:"#00b551" }}>
+            <div className="wrapper">
             {data.map((item, index) => (
               <div key={index}>
-               {/*render các phần tử có thuộc tính done >0*/}
-                {item.Order.filter((doneOrder) => doneOrder.done>0).map(
+                {item.Orders.filter((doneOrder) => doneOrder.done >0 && doneOrder.served < doneOrder.quantity).map(
                   (order, order_index) => (
                     <Order item={order}
                     billID={item.ID}
-                    table={item.Table} 
+                    table={item.Table}
+                    createTime={item.Created} 
                     key={order_index} 
                     isDone={true}
                     onServed_one={onServed_one}
@@ -127,12 +134,12 @@ function Kitchen() {
                 )}
               </div>
             ))}
-          </div>
+            </div>
+              </div>
+          
+         
 
         </Grid>
-      </div>
-      <div className="Kitchen-container__footer">
-        hotLine:0901231xxx
       </div>
     </div>
   );

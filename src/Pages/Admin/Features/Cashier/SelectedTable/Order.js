@@ -84,7 +84,9 @@ function OrderItem(props) {
           >
             <MinusIcon />
           </IconButton>
-          <p className={order.served===order.quantity?"order--done":""}>{order.quantity}</p>
+          <p className={order.served===order.quantity?"order--done":""}>
+            {order.quantity}
+          </p>
           <IconButton
             aria-label="plus-one"
             onClick={() => {

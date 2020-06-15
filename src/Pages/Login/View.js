@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import PropTypes from 'prop-types';
-import {Form,Button} from 'react-bootstrap'
+import {FormGroup, FormLabel,Button, Input} from '@material-ui/core'
 
 View.propTypes = {
   onLogin : PropTypes.func
@@ -13,23 +13,20 @@ function View(props) {
 
   const {onLogin} = props
   return (
-    <Form>
-  <Form.Group controlId="formBasicEmail">
-    <Form.Label>Email address</Form.Label>
-    <Form.Control placeholder="Enter email" value={name} onChange={(event)=>setName(event.target.value)} />
-  </Form.Group>
+    <form>
+  <FormGroup controlId="formBasicEmail">
+    <FormLabel>Email address</FormLabel>
+    <Input placeholder="Enter email" value={name} onChange={(event)=>setName(event.target.value)} />
+  </FormGroup>
 
-  <Form.Group controlId="formBasicPassword">
-    <Form.Label>Password</Form.Label>
-    <Form.Control type="password" placeholder="Password"value={password} onChange={(event)=>setPassword(event.target.value)}  />
-  </Form.Group>
-  <Form.Group controlId="formBasicCheckbox">
-    <Form.Check type="checkbox" label="Check me out" />
-  </Form.Group>
+  <FormGroup controlId="formBasicPassword">
+    <FormLabel>Password</FormLabel>
+    <Input type="password" placeholder="Password"value={password} onChange={(event)=>setPassword(event.target.value)}  />
+  </FormGroup>
   <Button variant="primary" onClick={()=>onLogin(name,password)}>
     Submit
   </Button>
-</Form>
+</form>
   );
 }
 
