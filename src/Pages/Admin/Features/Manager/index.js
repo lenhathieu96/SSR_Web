@@ -2,9 +2,10 @@ import React, { useState } from "react";
 // import PropTypes from 'prop-types';
 import { Button } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHamburger, faTable, faChartBar} from "@fortawesome/free-solid-svg-icons";
+import { faClipboardList, faChartBar} from "@fortawesome/free-solid-svg-icons";
 
 import MenuManager from './MenuManager'
+import Analytic from './Analytic'
 
 import './Manager.scss'
 
@@ -14,8 +15,8 @@ function Manager() {
   // render body with feature state 
   const renderSwitch = () => {
     switch (feature) {
-      // case 1:
-      //   return <Analytic/>
+      case 2:
+        return <Analytic/>
       default:
         return <MenuManager/>
     }
@@ -32,7 +33,7 @@ function Manager() {
           className={feature===1?"active":""}
         >
           <FontAwesomeIcon
-            icon={faHamburger}
+            icon={faClipboardList}
             size={"3x"}
             className="nav-icon"
           />
@@ -52,13 +53,13 @@ function Manager() {
         </Button>
 
         {/* table button */}
-        <Button
+      {/*   <Button
           className={feature=== 3?"active":""}
           onClick={()=>setFeature(3)}
         >
           <FontAwesomeIcon icon={faTable} size={"3x"} className="nav-icon" />
           Phòng Bàn
-        </Button>
+        </Button> */}
       </div>
 
       {/* if first content, left-top border-radius will be 0  */}

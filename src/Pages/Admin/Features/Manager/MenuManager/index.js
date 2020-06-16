@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Input from "@material-ui/core/Input";
-import Button from "@material-ui/core/Button";
+// import Button from "@material-ui/core/Button";
 import axios from "axios";
 import {toast} from 'react-toastify'
 
@@ -159,7 +159,7 @@ function MenuManager() {
 
       <div className="MenuManager-container__tools">
         {/* edit price for all food in menu button */}
-        <Button>Chỉnh Sửa Giá Tất Cả</Button>
+        {/* <Button>Chỉnh Sửa Giá Tất Cả</Button> */}
         {/* search food */}
         <Input
           placeholder="Nhập Tên Sản Phẩm"

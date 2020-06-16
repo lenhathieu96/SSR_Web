@@ -1,0 +1,80 @@
+$primaryColor: #283593;
+$secondaryColor: #e78200;
+
+.Analytic-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+
+    .blockInfo-container{
+        display:flex;
+        flex:0.3;
+        flex-direction: row;
+        justify-content: flex-start;
+        padding:5px;
+        margin-bottom:10px;
+        .blockRevenue{
+            flex-direction: column;
+            padding:5px;
+            flex:0.3;
+            display:flex;
+            justify-content: center;
+            background:white;
+            border-radius: 20px;
+            margin-right: 10px;
+
+            &__body{
+                display: flex;
+                flex:1;
+                padding:5px;
+                flex-direction: row;
+                justify-content: space-evenly;
+                .icon{
+                    flex:0.3;
+                    align-self: center;
+                }
+
+                .detail{
+                    flex:0.6;
+                    display:flex;
+                    justify-content: space-evenly;
+                    align-items: flex-start;
+                    flex-direction: column;
+                    .wrapper{
+                        flex:0.4;
+                        display:flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    p{
+                      font-size: x-large;
+                    }
+                }
+            }
+        }
+
+
+    }
+    .chart-container{
+        display:flex;
+        flex-direction: column;
+        flex:0.7;
+        justify-content: center;
+        align-items: center;
+        padding:10px;
+        background-color:white;
+        border-radius: 20px;
+        .chart{
+            display:flex;
+            flex:1;
+            background:white;
+        }   
+    }
+    p{
+        font-size: larger;
+        font-weight: bold;
+        color: $primaryColor;
+        margin:auto;
+    }
+}
