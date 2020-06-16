@@ -22,6 +22,8 @@ import "./Cashier.scss";
 function Cashier() {
   const dispatch = useDispatch();
 
+  const API_URL = URL+"/food"
+  
   const currentTable = useSelector(state=>state.currentTable)
 
   const [listTable, setListTable] = useState([]);
@@ -30,11 +32,27 @@ function Cashier() {
   const [isLoading,setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(URL+"/food").then((res) => {
-      if (res.status === 200) {
-        setData(res.data);
+    const cancelToken = axios.CancelToken;
+    const source = cancelToken.source()
+    
+    const loadMenu = () => {
+      try{
+        axios.get(API_URL, { cancelToken: source.token})
+        .then((res) => {
+          if (res.status === 200) {
+            setData(res.data);
+          }
+        });
+      }catch(error){
+        if (axios.isCancel(error)) {
+          console.log("cancelled");
+        } else {
+          throw error;
+        }
       }
-    });
+    }
+
+    loadMenu();
     const tables = new Array(30)
     .fill({})
     .map((item,index)=>({ ...item, Table: index+1}))
@@ -51,7 +69,11 @@ function Cashier() {
       setListTable(tempTables)
       setLoading(false)
     })
-  },[]);
+
+    return()=>{
+      source.cancel()
+    }
+  },[API_URL]);
 
   const notify = (text,isSuccess)=>{
     toast.clearWaitingQueue()

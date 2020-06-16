@@ -9,7 +9,8 @@ import{
   Switch,
   Route,
   useRouteMatch,
-  Link
+  NavLink,
+  Redirect,
 } from  'react-router-dom'
 
 import Cashier from "./Features/Cashier";
@@ -20,9 +21,8 @@ import "./Admin.scss";
 
 
 function Admin() {
-  let {path, url} = useRouteMatch()
-  
-  
+  let {url} = useRouteMatch()
+
   return (
     <Grid style ={{height:"100%"}}>
       <div className="Admin__header">
@@ -30,8 +30,8 @@ function Admin() {
           <img src={Logo} alt ="logo" />
         </div>
 
-        <div className="nav">
-          <Link to={url} className="nav-item">
+        <div className="navbar">
+          <NavLink to={`${url}/Cashier`} className="navbar__link" activeClassName="navbar__link--active">
             <div className = "nav-item__wrapper">
               <FontAwesomeIcon
                 icon={faCashRegister}
@@ -41,9 +41,9 @@ function Admin() {
               <p>THU NGÂN</p>
             </div>
              
-          </Link>
+          </NavLink>
 
-          <Link to={`${url}/Manager`}  className="nav-item">
+          <NavLink to={`${url}/Manager`}  className="navbar__link" activeClassName="navbar__link--active">
             <div className = "nav-item__wrapper">
               <FontAwesomeIcon
                 icon={faUserCog}
@@ -52,15 +52,24 @@ function Admin() {
               />
               <p>QUẢN LÝ</p>
             </div>
-          </Link>
-         <span className="indicator"/> 
+          </NavLink>
         </div>
       </div>
 
       <div className="Admin__body">   
         <Switch>
-          <Route exact path={path} component={<Cashier/>} />
-          <Route exact path={`${path}/Manager`} component={<Manager/>} />
+          <Route  path={`${url}/Cashier`} children={<Cashier/>} />
+          <Route  path={`${url}/Manager`} children={<Manager/>} />
+          <Route
+          path= {url}
+          render={() =>
+              <Redirect
+                to={{
+                  pathname: `${url}/Cashier`,
+                }}
+              />
+          }
+        />
         </Switch>
       </div>  
     </Grid>

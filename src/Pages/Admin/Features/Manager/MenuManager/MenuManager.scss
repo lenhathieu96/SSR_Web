@@ -1,5 +1,5 @@
 $addColor: #00b551;
-$updateColor: #283593;
+$primaryColor: #283593;
 $secodaryColor: #e78200;
 
 .MenuManager-container {
@@ -63,7 +63,7 @@ $secodaryColor: #e78200;
             background: gray;
   
             &--update {
-              background-color: $updateColor;
+              background-color: $primaryColor;
               flex: 0.3;
             }
   

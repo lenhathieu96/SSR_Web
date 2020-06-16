@@ -21,14 +21,33 @@ function MenuManager() {
   
   useEffect(() => {
     setLoading(true)
-    axios.get(API_URL).then((res) => {
-      if (res.status === 200) {
-        const menudata= res.data
-        setSourceMenu(menudata);
-        setFilterMenu(menudata);
-        setLoading(false)
-      }
-    });
+    const cancelToken = axios.CancelToken;
+    const source  = cancelToken.source();
+    
+    const loadMenu = () =>{
+      try{
+        axios.get(API_URL,{cancelToken: source.token})
+          .then((res) => {
+            if (res.status === 200) {
+              const menudata= res.data
+              setSourceMenu(menudata);
+              setFilterMenu(menudata);
+              setLoading(false)
+            }
+          });
+      }catch(error){
+        if (axios.isCancel(error)) {
+          console.log("cancelled");
+        } else {
+          throw error;
+        }
+      }  
+    }
+
+    loadMenu()
+    return()=>{
+      source.cancel()
+    }   
   }, [API_URL]);
 
   const notify = (text,isSuccess)=>{

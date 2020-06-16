@@ -84,6 +84,33 @@ function OrderDetail(props) {
               </p>
             </div>
             <div className="button-wrapper">
+              {/* btn update Bill */
+                currentTable.hasOwnProperty('Created') ? 
+                  (
+                    <Button 
+                      style={{background:color.green}}
+                      onClick={()=>{
+                        updateBill(currentTable.ID, currentTable.Orders)
+                      }}
+                    >
+                      <span>Cập Nhập</span>
+                    </Button>
+                  ) 
+                  : null
+              }
+              {/* btn switch Table */
+                currentTable.hasOwnProperty('Created') ? 
+                (
+                  <Button 
+                    style={{background:color.secondary}}
+                    onClick={()=>setShowSwitchTableModal(true)}
+                  >
+                    <span>Chuyển Bàn</span>
+                  </Button>
+                ) 
+                : null
+              }
+              
               <Button
                 className={!currentTable.hasOwnProperty('Created') ? "btn-add" : "btn-charge"}
                 onClick={() =>
@@ -99,36 +126,19 @@ function OrderDetail(props) {
               >
                 {!currentTable.hasOwnProperty('Created') ? "Tạo Đơn" : "Thanh Toán"}
               </Button>
-              {
-                currentTable.hasOwnProperty('Created') ? 
-                  (
-                    <Button 
-                      style={{background:color.green}}
-                      onClick={()=>{
-                        updateBill(currentTable.ID, currentTable.Orders)
-                      }}
-                    >
-                      <span>Cập Nhập</span>
-                    </Button>
-                  ) 
-                  : null
+              
+              {/* btn delete Bill */
+                currentTable.hasOwnProperty('Created') ?
+                (
+                  <Button 
+                    style={{background:color.red}}
+                    onClick={() => setShowConfirmModal(true)}
+                  >
+                    <span>Huỷ Đơn</span>
+                  </Button>
+                ) 
+                : null
               }
-              {currentTable.hasOwnProperty('Created') ? (
-                <Button 
-                  style={{background:color.secondary}}
-                  onClick={()=>setShowSwitchTableModal(true)}
-                >
-                  <span>Chuyển Bàn</span>
-                </Button>
-              ) : null}
-              {currentTable.hasOwnProperty('Created') ? (
-                <Button 
-                  style={{background:color.red}}
-                  onClick={() => setShowConfirmModal(true)}
-                >
-                  <span>Huỷ Đơn</span>
-                </Button>
-              ) : null}
             </div>
           </div>
         : 

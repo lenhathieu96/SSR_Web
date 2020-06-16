@@ -2,7 +2,7 @@ import React from "react";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { viVN } from "@material-ui/core/locale";
 
-import MainRoute from "./Route/MainRoute";
+import MainRoute from "./Route";
 
 import './App.scss'
 

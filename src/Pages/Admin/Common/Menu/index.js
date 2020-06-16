@@ -1,18 +1,17 @@
-import Paper from "@material-ui/core/Paper";
-import { makeStyles } from '@material-ui/core/styles';
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import PropTypes from "prop-types";
 import React, { useState } from "react";
+import PropTypes from "prop-types";
+
+import {Paper,
+        Table, 
+        TableBody, 
+        TableCell, 
+        TableContainer, 
+        TableHead, 
+        TablePagination, 
+        TableRow} from "@material-ui/core";
+import { makeStyles } from '@material-ui/core/styles';
+
 import './Menu.scss';
-
-
-
 
 const columns = [
   { id: "name", label: "Tên Món", minWidth: 300 },
@@ -44,7 +43,7 @@ function Menu(props) {
   };
 
   return (
-    <Paper classes={{rounded:classes.rounded,root:classes.root}} className = "menu">
+    <Paper classes={{rounded:classes.rounded,root:classes.root}}>
       <TableContainer className="menu__container">
         <Table stickyHeader aria-label="sticky table">
           {/*render header  */}
@@ -117,13 +116,17 @@ export default Menu;
 
 
 const useStyles = makeStyles({
-  rounded:{
-    borderRadius:20,
-  },
   root:{
-    padding:5,
     display:"flex",
     flexDirection:"column",
+    flexGrow:1,
+    height:0,
+    overflow: "auto",
+    padding:10,
+  },
+
+  rounded:{
+    borderRadius:20,
   },
   pagination__root:{
     overflow:"hidden"
