@@ -1,23 +1,26 @@
 {
   "files": {
-    "main.css": "/SSR_Web/static/css/main.cd61c07b.chunk.css",
-    "main.js": "/SSR_Web/static/js/main.8b19cea6.chunk.js",
-    "main.js.map": "/SSR_Web/static/js/main.8b19cea6.chunk.js.map",
+    "main.css": "/SSR_Web/static/css/main.d7215787.chunk.css",
+    "main.js": "/SSR_Web/static/js/main.e51aa3ff.chunk.js",
+    "main.js.map": "/SSR_Web/static/js/main.e51aa3ff.chunk.js.map",
     "runtime-main.js": "/SSR_Web/static/js/runtime-main.81327764.js",
     "runtime-main.js.map": "/SSR_Web/static/js/runtime-main.81327764.js.map",
-    "static/js/2.d23099e1.chunk.js": "/SSR_Web/static/js/2.d23099e1.chunk.js",
-    "static/js/2.d23099e1.chunk.js.map": "/SSR_Web/static/js/2.d23099e1.chunk.js.map",
+    "static/js/2.196c6747.chunk.js": "/SSR_Web/static/js/2.196c6747.chunk.js",
+    "static/js/2.196c6747.chunk.js.map": "/SSR_Web/static/js/2.196c6747.chunk.js.map",
     "index.html": "/SSR_Web/index.html",
-    "precache-manifest.ba5dac31e9b61ef54be977564a51ec5b.js": "/SSR_Web/precache-manifest.ba5dac31e9b61ef54be977564a51ec5b.js",
+    "precache-manifest.a2ce225ca202beb74a23b249d92db8c7.js": "/SSR_Web/precache-manifest.a2ce225ca202beb74a23b249d92db8c7.js",
     "service-worker.js": "/SSR_Web/service-worker.js",
-    "static/css/main.cd61c07b.chunk.css.map": "/SSR_Web/static/css/main.cd61c07b.chunk.css.map",
-    "static/js/2.d23099e1.chunk.js.LICENSE.txt": "/SSR_Web/static/js/2.d23099e1.chunk.js.LICENSE.txt",
-    "static/media/index.css": "/SSR_Web/static/media/MavenPro-VariableFont_wght.137d46ef.ttf"
+    "static/css/main.d7215787.chunk.css.map": "/SSR_Web/static/css/main.d7215787.chunk.css.map",
+    "static/js/2.196c6747.chunk.js.LICENSE.txt": "/SSR_Web/static/js/2.196c6747.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/SSR_Web/static/media/MavenPro-VariableFont_wght.137d46ef.ttf",
+    "static/media/loginLogo.png": "/SSR_Web/static/media/loginLogo.bfc023d6.png",
+    "static/media/logo.png": "/SSR_Web/static/media/logo.207b38f9.png",
+    "static/media/Login.scss": "/SSR_Web/static/media/vietnamese_beef_pho_22510_16x9.302cfeec.jpg"
   },
   "entrypoints": [
     "static/js/runtime-main.81327764.js",
-    "static/js/2.d23099e1.chunk.js",
-    "static/css/main.cd61c07b.chunk.css",
-    "static/js/main.8b19cea6.chunk.js"
+    "static/js/2.196c6747.chunk.js",
+    "static/css/main.d7215787.chunk.css",
+    "static/js/main.e51aa3ff.chunk.js"
   ]
 }
