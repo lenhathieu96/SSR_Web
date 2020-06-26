@@ -11,7 +11,10 @@ import{
   useRouteMatch,
   NavLink,
   Redirect,
+  useHistory
 } from  'react-router-dom'
+import Button from "@material-ui/core/Button";
+
 
 import Cashier from "./Features/Cashier";
 import Manager from "./Features/Manager"
@@ -22,6 +25,12 @@ import "./Admin.scss";
 
 function Admin() {
   let {url} = useRouteMatch()
+  let history = useHistory();
+
+  const logOut = () =>{
+    localStorage.removeItem('token')
+    history.push('/')
+  }
 
   return (
     <Grid style ={{height:"100%"}}>
@@ -53,6 +62,10 @@ function Admin() {
               <p>QUẢN LÝ</p>
             </div>
           </NavLink>
+        </div>
+
+        <div>
+          <Button onClick={()=>logOut()} style={{color:'#283593'}}>Đăng Xuất</Button>
         </div>
       </div>
 

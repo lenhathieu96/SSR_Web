@@ -8,6 +8,8 @@ import {
   faExternalLinkAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useHistory } from "react-router-dom";
+
 
 import {socket} from '../../Connect'
 
@@ -22,6 +24,12 @@ function Kitchen() {
   const [mute, setMute] = useState(false);
   const [data, setData] = useState(Data);
  
+  let history = useHistory();
+  const logOut = ()=>{
+    localStorage.removeItem('token')
+    history.push('/')
+  }
+
   useEffect(()=>{
     socket.emit('allBill')
     socket.on('allBillResult',(orders)=>{
@@ -111,6 +119,7 @@ function Kitchen() {
               size={"2x"}
               className ="icon"
               style={{ cursor: "pointer" }}
+              onClick={()=>logOut()}
             />
           </div>
 

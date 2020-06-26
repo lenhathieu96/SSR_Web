@@ -51,6 +51,9 @@ $secodaryColor: #e78200;
       transition: border-bottom 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     }
   }
+  btn--logout{
+    background-color: $primaryColor;
+  }
 }
 
 .Admin__body{
