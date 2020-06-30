@@ -1,5 +1,6 @@
-import React from "react";
+import React,{useState} from "react";
 import { useHistory } from "react-router-dom";
+import CircularProgress from '@material-ui/core/CircularProgress'
 import {
   FormGroup,
   Button,
@@ -20,18 +21,21 @@ import loginLogo from "../../Assets/Images/loginLogo.png";
 import "./Login.scss";
 
 function Login() {
+  const [loading,setLoading] = useState(false)
+  let history = useHistory();
+
   const initialValues = {
     username: "",
     password: "",
   };
 
-  let history = useHistory();
-
   const onLogin = (name, password) => {
+    setLoading(true)
     axios
       .post(URL, { name, password })
       .then((res) => {
         if (res.status === 200) {
+          setLoading(false)
           localStorage.setItem("token", "1234");
           let { from } =
             name.slice(0, 3) === "bep"
@@ -41,6 +45,7 @@ function Login() {
         }
       })
       .catch((err) => {
+        setLoading(false)
         console.log(err);
       });
   };
@@ -81,7 +86,7 @@ function Login() {
                         type="submit"
                         style={{ backgroundColor: "#00b551", color: "white" }}
                       >
-                        Đăng Nhập
+                        {loading ? <CircularProgress size={24} color='white'/> :'Đăng Nhập'}
                       </Button>
                     </FormControl>
                   </Form>
