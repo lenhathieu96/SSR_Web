@@ -14,20 +14,40 @@ export default function MainRoute() {
   return (
     <Router>
       <Switch>
-        <PrivateRoute  path="/:name/Dashboard" children ={<Admin />} />
-        <PrivateRoute  path="/:name/Kitchen" children={<Kitchen />} />
+        <AdminRoute  path="/:name/Dashboard" children ={<Admin />} />
+        <KitchenRoute  path="/:name/Kitchen" children={<Kitchen />} />
         <Route path="/" children={<Login />} />
       </Switch>
     </Router>
   );
 }
 
-function PrivateRoute({ children, ...rest }) {
+function AdminRoute({ children, ...rest }) {
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        localStorage.getItem("token") ? (
+        localStorage.getItem("manToken") ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/",
+              state: { from: location },
+            }}
+          />
+        )
+      }
+    />
+  );
+}
+
+function KitchenRoute({ children, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        localStorage.getItem("kitToken") ? (
           children
         ) : (
           <Redirect

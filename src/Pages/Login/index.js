@@ -13,12 +13,14 @@ import {
 import { Form, FastField, Formik } from "formik";
 import axios from "axios";
 
+import useStyles from './Styles/index.css'
+
 import InputTextField from "../../Components/custom-fields/InputTextField";
 
 import { URL } from "../../Connect";
 
 import loginLogo from "../../Assets/Images/loginLogo.png";
-import "./Login.scss";
+import "./Styles/Login.scss";
 
 function Login() {
   const [loading,setLoading] = useState(false)
@@ -29,6 +31,8 @@ function Login() {
     password: "",
   };
 
+  const classes = useStyles();
+
   const onLogin = (name, password) => {
     setLoading(true)
     axios
@@ -36,7 +40,7 @@ function Login() {
       .then((res) => {
         if (res.status === 200) {
           setLoading(false)
-          localStorage.setItem("token", "1234");
+          localStorage.setItem(name.slice(0,3)==='man'?'manToken':'kitToken', "1234");
           let { from } =
             name.slice(0, 3) === "bep"
               ? { from: { pathname: `/${name.slice(4)}/Kitchen` } }
@@ -52,9 +56,12 @@ function Login() {
 
   return (
     <Grid className="login-container">
-      <Dialog open={true} style={{borderRadius: 20, padding:10}}>
-        <DialogTitle>
+      <Dialog open={true} maxWidth='xs' fullWidth classes={{paper:classes.loginModalPaper}}>
+        <DialogTitle disableTypography classes={{root:classes.loginModalTitleRoot}}>
           <img src={loginLogo} alt="logo" />
+        </DialogTitle>
+        <DialogTitle disableTypography classes={{root:classes.loginModalTitleRoot}}>
+          <h1>Đăng Nhập</h1>
         </DialogTitle>
         <DialogContent>
           <Formik
@@ -64,7 +71,7 @@ function Login() {
           >
             {() => {
               return (
-                <div>
+                <Grid>
                   <Form style={{ display: "flex", flexDirection: "column" }}>
                     <FormGroup className="input-container">
                       <FastField
@@ -81,8 +88,10 @@ function Login() {
                         type="password"
                       />
                     </FormGroup>
+                   
                     <FormControl style={{marginTop:20}}>
                       <Button
+                        classes={{root:classes.btnLogin}}
                         type="submit"
                         style={{ backgroundColor: "#00b551", color: "white" }}
                       >
@@ -90,7 +99,7 @@ function Login() {
                       </Button>
                     </FormControl>
                   </Form>
-                </div>
+                </Grid>
               );
             }}
           </Formik>

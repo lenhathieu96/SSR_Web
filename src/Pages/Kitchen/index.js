@@ -26,7 +26,7 @@ function Kitchen() {
  
   let history = useHistory();
   const logOut = ()=>{
-    localStorage.removeItem('token')
+    localStorage.removeItem('kitToken')
     history.push('/')
   }
 

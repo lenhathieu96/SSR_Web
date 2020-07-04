@@ -28,7 +28,7 @@ function Admin() {
   let history = useHistory();
 
   const logOut = () =>{
-    localStorage.removeItem('token')
+    localStorage.removeItem('manToken')
     history.push('/')
   }
 
