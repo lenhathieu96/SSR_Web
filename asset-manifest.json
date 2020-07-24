@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/SSR_Web/static/css/main.a428aef2.chunk.css",
-    "main.js": "/SSR_Web/static/js/main.f2f8543b.chunk.js",
-    "main.js.map": "/SSR_Web/static/js/main.f2f8543b.chunk.js.map",
+    "main.js": "/SSR_Web/static/js/main.2c671aca.chunk.js",
+    "main.js.map": "/SSR_Web/static/js/main.2c671aca.chunk.js.map",
     "runtime-main.js": "/SSR_Web/static/js/runtime-main.034cfdd1.js",
     "runtime-main.js.map": "/SSR_Web/static/js/runtime-main.034cfdd1.js.map",
     "static/js/2.79a9df7c.chunk.js": "/SSR_Web/static/js/2.79a9df7c.chunk.js",
     "static/js/2.79a9df7c.chunk.js.map": "/SSR_Web/static/js/2.79a9df7c.chunk.js.map",
     "index.html": "/SSR_Web/index.html",
-    "precache-manifest.a8c8270e744684ab18d027ed8a16142d.js": "/SSR_Web/precache-manifest.a8c8270e744684ab18d027ed8a16142d.js",
+    "precache-manifest.82f3c83451fd63c8e00dfddf10124c33.js": "/SSR_Web/precache-manifest.82f3c83451fd63c8e00dfddf10124c33.js",
     "service-worker.js": "/SSR_Web/service-worker.js",
     "static/css/main.a428aef2.chunk.css.map": "/SSR_Web/static/css/main.a428aef2.chunk.css.map",
     "static/js/2.79a9df7c.chunk.js.LICENSE.txt": "/SSR_Web/static/js/2.79a9df7c.chunk.js.LICENSE.txt",
@@ -20,6 +20,6 @@
     "static/js/runtime-main.034cfdd1.js",
     "static/js/2.79a9df7c.chunk.js",
     "static/css/main.a428aef2.chunk.css",
-    "static/js/main.f2f8543b.chunk.js"
+    "static/js/main.2c671aca.chunk.js"
   ]
 }
