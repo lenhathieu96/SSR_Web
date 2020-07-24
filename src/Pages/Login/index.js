@@ -33,18 +33,18 @@ function Login() {
 
   const classes = useStyles();
 
-  const onLogin = (name, password) => {
+  const onLogin = (username, password) => {
     setLoading(true)
     axios
-      .post(URL, { name, password })
+      .post(URL+'/auth', {params:{username, password}  })
       .then((res) => {
         if (res.status === 200) {
           setLoading(false)
-          localStorage.setItem(name.slice(0,3)==='man'?'manToken':'kitToken', "1234");
+          localStorage.setItem(username.slice(0,3)==='man'?'manToken':'kitToken', "1234");
           let { from } =
-            name.slice(0, 3) === "bep"
-              ? { from: { pathname: `/${name.slice(4)}/Kitchen` } }
-              : { from: { pathname: `/${name.slice(4)}/Dashboard` } };
+          username.slice(0, 3) === "bep"
+              ? { from: { pathname: `/${username.slice(4)}/Kitchen` } }
+              : { from: { pathname: `/${username.slice(4)}/Dashboard` } };
           history.replace(from);
         }
       })

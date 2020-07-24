@@ -13,7 +13,7 @@ InputTextField.propTypes = {
 function InputTextField(props) {
   const { 
       field,
-        label, placeholder,type,disabled
+      label, placeholder,type,disabled
     } = props;
 
   return (
