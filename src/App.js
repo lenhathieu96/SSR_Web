@@ -31,7 +31,6 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <MainRoute />
-      <ToastContainer/>
     </ThemeProvider>
   );
 }
