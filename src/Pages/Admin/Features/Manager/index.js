@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import PropTypes from 'prop-types';
 import { Button } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClipboardList, faChartBar} from "@fortawesome/free-solid-svg-icons";
@@ -70,9 +69,5 @@ function Manager() {
     </div>
   );
 }
-
-// Manager.propTypes = {
-
-// };
 
 export default Manager;

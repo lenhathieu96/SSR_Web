@@ -18,16 +18,15 @@ function MenuManager() {
   useEffect(() => {
     setLoading(true)
     const loadMenu = async () =>{
-      const allFood = await foodAPI.getAllFood()
-      .then(res=>{
-        if(res && res.data){
-          return res.data
-        }
-        return res
-      })
-      setSourceMenu(allFood);
-      setFilterMenu(allFood);
-      setLoading(false)
+      try{
+        const allFood = await foodAPI.getAllFood()
+        setSourceMenu(allFood);
+        setFilterMenu(allFood);
+        setLoading(false)
+      }catch(error){
+        console.log(error)
+        setLoading(false)
+      } 
     }
     loadMenu()
   }, []);
@@ -87,8 +86,6 @@ function MenuManager() {
       console.log(err)
     })
   };
-
-  
 
   //search data
   const search = (text) => {

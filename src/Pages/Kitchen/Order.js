@@ -47,7 +47,7 @@ function Order(props) {
           </div>
         )}
         <p style={{ fontWeight: "bold" }}>
-          Số Lượng: {isDone ? item.done-item.served : item.quantity-item.done}
+          Số Lượng: {isDone ? item.done - item.served : item.quantity-item.done}
         </p>
       </div>
 

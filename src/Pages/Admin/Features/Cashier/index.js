@@ -14,41 +14,28 @@ import Menu from "../../Common/Menu";
 import TableNull from "./SelectedTable/tableNulll"
 import TableDetail from "./SelectedTable"
 
-import axios from "axios";
-import {socket, URL} from "../../../../Connect";
+import foodAPI from '../../../../Api/foodAPI'
+import {socket} from "../../../../Api/Socket";
 
 import "./Cashier.scss";
 
 function Cashier() {
   const dispatch = useDispatch();
 
-  const API_URL = URL+"/food"
-  
   const currentTable = useSelector(state=>state.currentTable)
 
   const [listTable, setListTable] = useState([]);
-  const [menuData, setData] = useState([]);
+  const [menuData, setMenuData] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
   const [isLoading,setLoading] = useState(true);
 
   useEffect(() => {
-    const cancelToken = axios.CancelToken;
-    const source = cancelToken.source()
-    
-    const loadMenu = () => {
+    const loadMenu = async () =>{
       try{
-        axios.get(API_URL, { cancelToken: source.token})
-        .then((res) => {
-          if (res.status === 200) {
-            setData(res.data);
-          }
-        });
+        const allFood = await foodAPI.getAllFood()
+        setMenuData(allFood)
       }catch(error){
-        if (axios.isCancel(error)) {
-          console.log("cancelled");
-        } else {
-          throw error;
-        }
+        console.log(error)
       }
     }
 
@@ -69,11 +56,7 @@ function Cashier() {
       setListTable(tempTables)
       setLoading(false)
     })
-
-    return()=>{
-      source.cancel()
-    }
-  },[API_URL]);
+  },[]);
 
   const notify = (text,isSuccess)=>{
     toast.clearWaitingQueue()

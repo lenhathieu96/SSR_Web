@@ -1,5 +1,6 @@
 import React,{useState} from "react";
 import { useHistory } from "react-router-dom";
+
 import CircularProgress from '@material-ui/core/CircularProgress'
 import {
   FormGroup,
@@ -11,13 +12,12 @@ import {
   FormControl,
 } from "@material-ui/core";
 import { Form, FastField, Formik } from "formik";
-import axios from "axios";
 
 import useStyles from './Styles/index.css'
 
 import InputTextField from "../../Components/custom-fields/InputTextField";
 
-import { URL } from "../../Connect";
+import authAPI from '../../Api/AuthAPI'
 
 import loginLogo from "../../Assets/Images/loginLogo.png";
 import "./Styles/Login.scss";
@@ -33,25 +33,25 @@ function Login() {
 
   const classes = useStyles();
 
-  const onLogin = (username, password) => {
+  const onLogin = async (userAccount) => {
     setLoading(true)
-    axios
-      .post(URL+'/auth', {params:{username, password}  })
-      .then((res) => {
-        if (res.status === 200) {
-          setLoading(false)
-          localStorage.setItem(username.slice(0,3)==='man'?'manToken':'kitToken', "1234");
-          let { from } =
+    try{
+      const respone = await authAPI.login(userAccount)
+      localStorage.setItem('accessToken',respone.data.accessToken)
+      localStorage.setItem('refreshToken', respone.data.refreshToken)
+      
+      let username = userAccount.username
+      let { from } =
           username.slice(0, 3) === "bep"
               ? { from: { pathname: `/${username.slice(4)}/Kitchen` } }
               : { from: { pathname: `/${username.slice(4)}/Dashboard` } };
           history.replace(from);
-        }
-      })
-      .catch((err) => {
-        setLoading(false)
-        console.log(err);
-      });
+
+      setLoading(false)
+    }catch(error){
+      console.log(error)
+      setLoading(false)
+    }
   };
 
   return (
@@ -67,7 +67,7 @@ function Login() {
           <Formik
             initialValues={initialValues}
             enableReinitialize
-            onSubmit={(value) => onLogin(value.username, value.password)}
+            onSubmit={(value) => onLogin(value)}
           >
             {() => {
               return (
@@ -95,7 +95,7 @@ function Login() {
                         type="submit"
                         style={{ backgroundColor: "#00b551", color: "white" }}
                       >
-                        {loading ? <CircularProgress size={24} color='white'/> :'Đăng Nhập'}
+                        {loading ? <CircularProgress size={24} color='inherit'/> :'Đăng Nhập'}
                       </Button>
                     </FormControl>
                   </Form>

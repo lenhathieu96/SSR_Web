@@ -10,8 +10,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHistory } from "react-router-dom";
 
-
-import {socket} from '../../Connect'
+import {socket} from '../../Api/Socket'
 
 import Order from "./Order";
 
@@ -26,7 +25,8 @@ function Kitchen() {
  
   let history = useHistory();
   const logOut = ()=>{
-    localStorage.removeItem('kitToken')
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
     history.push('/')
   }
 
@@ -84,7 +84,7 @@ function Kitchen() {
           <div className= "wrapper">
           {data.map((item, index) => (
             <div key={index}>
-              {item.Orders.filter((doneOrder) => doneOrder.done < doneOrder.quantity && doneOrder.served===0).map(
+              {item.Orders.filter((doneOrder) => doneOrder.done < doneOrder.quantity).map(
                 (order, order_index) => (
                   <Order item={order}
                   billID={item.ID}
@@ -128,7 +128,7 @@ function Kitchen() {
             <div className="wrapper">
             {data.map((item, index) => (
               <div key={index}>
-                {item.Orders.filter((doneOrder) => doneOrder.done >0 && doneOrder.served < doneOrder.quantity).map(
+                {item.Orders.filter((doneOrder) => doneOrder.done >0 && doneOrder.done - doneOrder.served >0).map(
                   (order, order_index) => (
                     <Order item={order}
                     billID={item.ID}

@@ -21,6 +21,7 @@ import Manager from "./Features/Manager"
 
 import Logo from "../../Assets/Images/logo.png";
 import "./Admin.scss";
+import color from "../../utils/Color";
 
 
 function Admin() {
@@ -28,7 +29,8 @@ function Admin() {
   let history = useHistory();
 
   const logOut = () =>{
-    localStorage.removeItem('manToken')
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
     history.push('/')
   }
 
@@ -46,10 +48,11 @@ function Admin() {
                 icon={faCashRegister}
                 size={"2x"}
                 className="icon"
+                color={color.primary}
               />
               <p>THU NGÂN</p>
             </div>
-             
+
           </NavLink>
 
           <NavLink to={`${url}/Manager`}  className="navbar__link" activeClassName="navbar__link--active">
@@ -58,14 +61,14 @@ function Admin() {
                 icon={faUserCog}
                 size={"2x"}
                 className="icon"
-              />
+                color={color.primary}/>
               <p>QUẢN LÝ</p>
             </div>
           </NavLink>
         </div>
 
         <div>
-          <Button onClick={()=>logOut()} style={{color:'#283593'}}>Đăng Xuất</Button>
+          <Button onClick={()=>logOut()} className = 'btn--logout'>Đăng Xuất</Button>
         </div>
       </div>
 
