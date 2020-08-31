@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const axiosClient = axios.create({
-    baseURL: 'http://localhost:8000',
+    baseURL: 'https://ssrestaurant.herokuapp.com',
     headers:{
         'content-type': 'application/json'
     }
